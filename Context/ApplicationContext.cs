@@ -12,6 +12,11 @@ public class ApplicationContext : DbContext
     public DbSet<Authority> Authorities { get; set; }
     public DbSet<EmployeeStatus> EmployeeStatuses { get; set; }
     
+    public DbSet<Project> Projects { get; set; }
+    public DbSet<ProjectTeam> ProjectTeams { get; set; }
+    public DbSet<ProjectStatus> ProjectStatuses { get; set; }
+    public DbSet<ProjectType> ProjectTypes { get; set; }
+    
     public ApplicationContext()
     {
     }
