@@ -25,33 +25,34 @@ public class Employee
     
     [Required]
     [Column("Subdivision_id")]
+    [DeleteBehavior(DeleteBehavior.Restrict)]
     public Subdivision Subdivision { get; set; } = null!;
     
     [ForeignKey(nameof(Subdivision))]
-    [DeleteBehavior(DeleteBehavior.Restrict)]
+    
     public int SubdivisionId { get; set; }
     
     [Required]
     [Column("Position_id")]
+    [DeleteBehavior(DeleteBehavior.Restrict)]
     public Position Position { get; set; } = null!;
     
     [ForeignKey(nameof(Position))]
-    [DeleteBehavior(DeleteBehavior.Restrict)]
     public int PositionId { get; set; }
     
     [Required]
     [Column("employee_status_id")]
+    [DeleteBehavior(DeleteBehavior.Restrict)]
     public EmployeeStatus Status { get; set; } = null!;
     
     [ForeignKey(nameof(Status))]
-    [DeleteBehavior(DeleteBehavior.Restrict)]
     public int StatusId { get; set; }
     
     [Column("people_partner_id")]
+    [DeleteBehavior(DeleteBehavior.Restrict)]
     public Employee PeoplePartner { get; set; } = null!;
     
     [ForeignKey(nameof(PeoplePartner))]
-    [DeleteBehavior(DeleteBehavior.Restrict)]
     public int PeoplePartnerId { get; set; }
     
     public ICollection<Role> Roles { get; set; } = null!;
