@@ -43,4 +43,6 @@ public class Project
     [Column("comment", TypeName = "text")]
     public string Comment { get; set; } = null!;
     
+    ICollection<ProjectTeam> ProjectTeams { get; set; } = null!;
+    
 }

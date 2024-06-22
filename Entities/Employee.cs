@@ -59,4 +59,8 @@ public class Employee
     
     public ICollection<Authority> Authorities { get; set; } = null!;
     
+    public ICollection<ApprovalRequest> ApprovalRequests { get; set; } = null!;
+    
+    public ICollection<ProjectTeam> Projects { get; set; } = null!;
+    
 }
