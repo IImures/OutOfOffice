@@ -7,9 +7,11 @@ namespace OutOfOffice.Entities;
 public class EmployeeStatus
 {
     [Key]
+    [Column("id")]
     public int Id { get; set; }
     
     [Required]
     [MaxLength(50)]
+    [Column("status")]
     public string Status { get; set; } = null!;
 }

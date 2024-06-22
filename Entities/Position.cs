@@ -7,9 +7,11 @@ namespace OutOfOffice.Entities;
 public class Position
 {
     [Key]
+    [Column("id")]
     public int Id { get; set; }
     
     [Required]
     [MaxLength(50)]
+    [Column("position_name")]
     public string Name { get; set; } = null!;
 }

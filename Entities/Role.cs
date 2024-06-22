@@ -7,10 +7,12 @@ namespace OutOfOffice.Entities;
 public class Role
 {
     [Key]
+    [Column("id")]
     public int Id { get; set; }
     
     [Required]
     [MaxLength(50)]
+    [Column("role_name")]
     public string RoleName { get; set; } = null!;
     
 }

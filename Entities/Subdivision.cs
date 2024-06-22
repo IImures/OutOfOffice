@@ -7,9 +7,11 @@ namespace OutOfOffice.Entities;
 public class Subdivision
 {
     [Key]
+    [Column("id")]
     public int Id { get; set; }
     
     [Required]
     [MaxLength(50)]
+    [Column("subdivision_name")]
     public string Name { get; set; } = null!;
 }
