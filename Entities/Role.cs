@@ -15,4 +15,6 @@ public class Role
     [Column("role_name")]
     public string RoleName { get; set; } = null!;
     
+    ICollection<EmployeeRole> Employees { get;} = new List<EmployeeRole>();
+    
 }

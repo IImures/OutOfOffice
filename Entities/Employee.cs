@@ -21,6 +21,10 @@ public class Employee
     [Column("out_of_office_balance")]
     public short OutOfOfficeBalance { get; set; }
     
+    [MaxLength(200)]
+    [Column("password")]
+    public string Password { get; set; } = null!;
+    
     //Todo: Add Photo property
     
     [Required]
@@ -50,14 +54,14 @@ public class Employee
     
     [Column("people_partner_id")]
     [DeleteBehavior(DeleteBehavior.Restrict)]
-    public Employee PeoplePartner { get; set; } = null!;
+    public Employee? PeoplePartner { get; set; } = null!;
     
     [ForeignKey(nameof(PeoplePartner))]
-    public int PeoplePartnerId { get; set; }
+    public int? PeoplePartnerId { get; set; }
     
-    public ICollection<Role> Roles { get; set; } = null!;
+    public ICollection<EmployeeRole> Roles { get;} = new List<EmployeeRole>();
     
-    public ICollection<Authority> Authorities { get; set; } = null!;
+    //public ICollection<Authority> Authorities { get; set; } = null!;
     
     public ICollection<ApprovalRequest> ApprovalRequests { get; set; } = null!;
     
