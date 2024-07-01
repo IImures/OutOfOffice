@@ -1,9 +1,14 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using System.Text.Json;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using OutOfOffice.DTO.Requests;
 using OutOfOffice.Services;
 
 namespace OutOfOffice.Controllers;
 
+
+[Route("api/employees")]
+[ApiController]
 public class EmployeeController : ControllerBase
 {
     
@@ -14,11 +19,12 @@ public class EmployeeController : ControllerBase
         _employeeService = employeeService;
     }
     
-    [HttpGet("api/employees")]
-    [Authorize(Roles = "HR")]
-    public async Task<IActionResult> GetEmployees()
+    [HttpGet]
+    public async Task<IActionResult> GetEmployees(
+        [FromQuery] PageRequest request
+        )
     {
-        return Ok("Test");
+        return Ok(await _employeeService.GetEmployees(request));
     }
     //
     // [HttpGet("api/employees/{id}")]
