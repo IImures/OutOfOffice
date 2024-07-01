@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using OutOfOffice.DTO.Requests;
+using OutOfOffice.DTO.Responses;
 using OutOfOffice.Services;
 
 namespace OutOfOffice.Controllers;
@@ -24,7 +25,17 @@ public class EmployeeController : ControllerBase
         [FromQuery] PageRequest request
         )
     {
-        return Ok(await _employeeService.GetEmployees(request));
+        var pagedList = await _employeeService.GetEmployees(request);
+        var response = new PageListResponse<EmployeeResponse>()
+        {
+            CurrentPage = pagedList.CurrentPage,
+            TotalPages = pagedList.TotalPages,
+            PageSize = pagedList.PageSize,
+            TotalCount = pagedList.TotalCount,
+            Items = pagedList.ToList()
+        };
+
+        return Ok(response);
     }
     //
     // [HttpGet("api/employees/{id}")]
