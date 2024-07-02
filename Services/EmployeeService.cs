@@ -24,7 +24,7 @@ public class EmployeeService(ApplicationContext context, IAuthService authServic
             .Include(e => e.Subdivision)
             .Include(e => e.Position)
             .Include(e => e.Status)
-            .Where(e => e.Status.Status != StatusType.Inactive)
+            .Where(e => e.Status.Status != EmployeeStatusType.Inactive)
             .Include(e => e.Roles)
                 .ThenInclude(er=> er.Role)
             .AsQueryable();
@@ -144,7 +144,7 @@ public class EmployeeService(ApplicationContext context, IAuthService authServic
         var emp = await _context.Employees.FirstOrDefaultAsync(e => e.Id == id)
                   ?? throw new NotFoundException($"Employee not found with id {id}", 404);
         
-        emp.Status = await _context.EmployeeStatuses.FirstOrDefaultAsync(s => s.Status == StatusType.Inactive)
+        emp.Status = await _context.EmployeeStatuses.FirstOrDefaultAsync(s => s.Status == EmployeeStatusType.Inactive)
                              ?? throw new NotFoundException("Status not found", 404);
         
         await _context.SaveChangesAsync();
@@ -156,7 +156,7 @@ public class EmployeeService(ApplicationContext context, IAuthService authServic
                    .Include(e => e.Subdivision)
                    .Include(e => e.Position)
                    .Include(e => e.Status)
-                   .Where(e=> e.Status.Status != StatusType.Inactive)
+                   .Where(e=> e.Status.Status != EmployeeStatusType.Inactive)
                    .Include(e => e.Roles)
                    .ThenInclude(er => er.Role)
                    .FirstOrDefaultAsync(e => e.Id == id)

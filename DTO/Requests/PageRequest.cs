@@ -5,7 +5,7 @@ namespace OutOfOffice.DTO.Requests;
 public class PageRequest
 {
     [Required]
-    public string SortBy { get; set; } = "Id";
+    public string SortBy { get; set; } = "id";
     [Required]
     public string SortDirection { get; set; } = "asc";
     [Required]

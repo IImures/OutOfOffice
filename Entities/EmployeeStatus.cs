@@ -17,7 +17,7 @@ public class EmployeeStatus
     
 }
 
-public static class StatusType {
+public static class EmployeeStatusType {
     public static readonly string Active = "Active";
     public static readonly string Inactive = "Inactive";
     public static readonly string OnVacation = "On Vacation";
