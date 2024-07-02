@@ -15,3 +15,9 @@ public class ProjectType
     [Column("type")]
     public string Type { get; set; } = null!;
 }
+
+public static class ProjectTypeEnum {
+    public static readonly string Active = "Active";
+    public static readonly string Inactive = "Inactive";
+    public static readonly string Canceled = "Canceled";
+}

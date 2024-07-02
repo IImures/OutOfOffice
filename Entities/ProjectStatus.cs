@@ -15,3 +15,9 @@ public class ProjectStatus
     [Column("status")]
     public string Status { get; set; } = null!;
 }
+
+public static class ProjectStatusType {
+    public static readonly string Active = "Active";
+    public static readonly string Inactive = "Inactive";
+    public static readonly string Canceled = "Canceled";
+}

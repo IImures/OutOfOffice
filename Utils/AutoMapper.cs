@@ -22,5 +22,12 @@ public class AutoMapper : Profile
         CreateMap<LeaveRequest, LeaveRequestResponse>()
             .ForMember(dest => dest.Status, opt => opt.MapFrom(src => src.Status.Status))
             .ForMember(dest => dest.Employee, opt => opt.MapFrom(src => src.Employee));
+
+        CreateMap<Project, ProjectResponse>()
+            .ForMember(dest => dest.ProjectManager, opt => opt.MapFrom(src => src.ProjectManager.FullName))
+            .ForMember(dest => dest.ProjectStatus, opt => opt.MapFrom(src => src.Status.Status))
+            .ForMember(dest => dest.ProjectType, opt => opt.MapFrom(src => src.Type.Type))
+            .ForMember(dest => dest.Employees, opt => opt.MapFrom(src => src.ProjectTeams.Select(pt => pt.Employee.FullName).ToList()));
+        
     }
 }
