@@ -22,7 +22,7 @@ public class ApprovalRequestService(ApplicationContext _context, IMapper _mapper
         if (!AllowedSortDirections.Contains(request.SortDirection) ||
             !AllowedSortColumns.Contains(request.SortBy))
         {
-            throw new Exception("Bad sorting parameters");
+            throw new BadRequestParameters("Bad sorting parameters", 400);
         }
         
         string sorting = $"{request.SortBy} {request.SortDirection}";

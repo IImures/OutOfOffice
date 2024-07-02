@@ -3,7 +3,6 @@ using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using OutOfOffice.Context;
 using OutOfOffice.DTO.Requests;
-using OutOfOffice.DTO.Responses;
 using OutOfOffice.Entities;
 using OutOfOffice.Exceptions;
 using OutOfOffice.Utils;
@@ -22,7 +21,7 @@ public class LeaveRequestService(ApplicationContext _context, IMapper _mapper) :
         if (!AllowedSortDirections.Contains(request.SortDirection) ||
             !AllowedSortColumns.Contains(request.SortBy))
         {
-            throw new Exception("Bad sorting parameters");
+            throw new BadRequestParameters("Bad sorting parameters", 400);
         }
         
         string sorting = $"{request.SortBy} {request.SortDirection}";
@@ -35,20 +34,7 @@ public class LeaveRequestService(ApplicationContext _context, IMapper _mapper) :
 
     public async Task<LeaveRequestResponse> GetLeaveRequest(int id)
     {
-        return _mapper.Map<LeaveRequestResponse>(await _context.LeaveRequests
-            .Include(lr => lr.Status)
-            .Include(lr => lr.Employee)
-                .ThenInclude(e => e.Subdivision)
-            .Include(e => e.Employee)
-                .ThenInclude(e => e.Position)
-            .Include(lr => lr.Employee)
-                .ThenInclude(e => e.Status)
-            .Include(lr => lr.Employee)
-                .ThenInclude(e => e.Roles)
-                    .ThenInclude(er => er.Role)
-            .FirstOrDefaultAsync(lr => lr.Id == id)
-            ?? throw new NotFoundException($"Leave request with id {id} not found", 404)
-        );
+        return _mapper.Map<LeaveRequestResponse>(await GetLeaveRequestById(id));
     }
 
     public async Task AddLeaveRequest(AddLeaveRequestRequest request)
@@ -62,10 +48,10 @@ public class LeaveRequestService(ApplicationContext _context, IMapper _mapper) :
         };
         
         var status = _context.LeaveRequestStatuses.FirstOrDefault(s => s.Status == LeaveStatusType.Created)
-            ?? throw new NotFoundException("Leave request status not found", 404);
+            ?? throw new NotFoundException("Leave request with status not found", 404);
         
         var employee = _context.Employees.FirstOrDefault(e => e.Id == request.EmployeeId)
-            ?? throw new NotFoundException("Employee not found", 404);
+            ?? throw new NotFoundException($"Employee with id {request.EmployeeId} not found", 404);
         
         leaveRequest.Employee = employee;
         leaveRequest.Status = status;
@@ -144,6 +130,23 @@ public class LeaveRequestService(ApplicationContext _context, IMapper _mapper) :
                     .ThenInclude(er => er.Role)
             .Include(lr => lr.Status);
 
+    }
+    
+    private async Task<LeaveRequest> GetLeaveRequestById(int id)
+    {
+        return await _context.LeaveRequests
+                   .Include(lr => lr.Status)
+                   .Include(lr => lr.Employee)
+                   .ThenInclude(e => e.Subdivision)
+                   .Include(e => e.Employee)
+                   .ThenInclude(e => e.Position)
+                   .Include(lr => lr.Employee)
+                   .ThenInclude(e => e.Status)
+                   .Include(lr => lr.Employee)
+                   .ThenInclude(e => e.Roles)
+                   .ThenInclude(er => er.Role)
+                   .FirstOrDefaultAsync(lr => lr.Id == id)
+               ?? throw new NotFoundException($"Leave request with id {id} not found", 404);
     }
 }
 
