@@ -31,7 +31,7 @@ public class EmployeeService(ApplicationContext context, IAuthService authServic
         if (!AllowedSortDirections.Contains(request.SortDirection) ||
             !AllowedSortColumns.Contains(request.SortBy))
         {
-            throw new Exception("Bad request");
+            throw new BadRequestParameters("Bad sorting parameters");
         }
 
         string sorting = $"{request.SortBy} {request.SortDirection}";
