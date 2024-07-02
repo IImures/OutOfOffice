@@ -1,4 +1,6 @@
-﻿namespace OutOfOffice.DTO.Responses;
+﻿using OutOfOffice.Entities;
+
+namespace OutOfOffice.DTO.Responses;
 
 public class EmployeeResponse
 {
@@ -6,7 +8,7 @@ public class EmployeeResponse
 
     public string FullName { get; set; }
 
-    public short OutOffOfficeBalance { get; set; }
+    public short OutOfOfficeBalance { get; set; }
     
     public string Subdivision { get; set; }
 

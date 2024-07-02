@@ -8,7 +8,8 @@ public class RegisterRequest
     [MaxLength(100)] 
     public string FullName { get; set; } = null!;
     [Required] 
-    public short OufOfOfficeBalance { get; set; }
+    [Range(0, short.MaxValue, ErrorMessage = "Value for must be greater or equal to 0.")]
+    public short OutOfOfficeBalance { get; set; }
     [Required] 
     public int SubdivisionId { get; set; }
     [Required] 
@@ -17,6 +18,7 @@ public class RegisterRequest
     public int StatusId { get; set; }
      
     public int? PeoplePartnerId { get; set; }
+    
     [Required] 
     public int[] RolesId { get; set; } = null!;
     [Required] 

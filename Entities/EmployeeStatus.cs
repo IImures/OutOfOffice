@@ -9,9 +9,16 @@ public class EmployeeStatus
     [Key]
     [Column("id")]
     public int Id { get; set; }
-    
+
     [Required]
     [MaxLength(50)]
     [Column("status")]
     public string Status { get; set; } = null!;
+    
+}
+
+public static class StatusType {
+    public static readonly string Active = "Active";
+    public static readonly string Inactive = "Inactive";
+    public static readonly string OnVacation = "On Vacation";
 }

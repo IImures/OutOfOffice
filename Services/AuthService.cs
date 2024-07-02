@@ -24,20 +24,20 @@ public class AuthService : IAuthService
         _configuration = configuration;
     }
     
-    public async Task RegisterUser(RegisterRequest request)
+    public async Task<EmployeeResponse> RegisterUser(RegisterRequest request)
     {
-        // var user = await _appContext.Employees
-        //     .FirstOrDefaultAsync(u => u.FullName == request.FullName);
-        //
-        // if (user != null)
-        // {
-        //     throw new UserExitsException("User with this name already exists", 401);
-        // }
+        var user = await _appContext.Employees
+            .FirstOrDefaultAsync(u => u.FullName == request.FullName);
+        
+        if (user != null)
+        {
+            throw new UserExitsException("User with this name already exists", 401);
+        }
         
         Employee userToSave = new()
         {
             FullName = request.FullName,
-            OutOfOfficeBalance = request.OufOfOfficeBalance,
+            OutOfOfficeBalance = request.OutOfOfficeBalance,
         };
         
         PasswordHasher<Employee> passwordHasher = new();
@@ -89,6 +89,18 @@ public class AuthService : IAuthService
 
         await _appContext.Employees.AddAsync(userToSave);
         await _appContext.SaveChangesAsync();
+
+        return new EmployeeResponse()
+        {
+            Id = userToSave.Id,
+            FullName = userToSave.FullName,
+            OutOfOfficeBalance = userToSave.OutOfOfficeBalance,
+            Subdivision = userToSave.Subdivision.Name,
+            Position = userToSave.Position.Name,
+            Status = userToSave.Status.Status,
+            Roles = userToSave.Roles.Select(empRole => empRole.Role.RoleName).ToList(),
+            PartnerId = userToSave.PeoplePartnerId
+        };
     }
 
     public async Task<LoginResponse> LoginUser(LoginRequest request)
@@ -217,7 +229,7 @@ public class AuthService : IAuthService
 public interface IAuthService
 {
  
-    public Task RegisterUser(RegisterRequest request);
+    public Task<EmployeeResponse> RegisterUser(RegisterRequest request);
     
     public Task<LoginResponse> LoginUser(LoginRequest request);
     

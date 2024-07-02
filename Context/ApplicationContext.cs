@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using OutOfOffice.Entities;
+using OutOfOffice.Utils;
 
 namespace OutOfOffice.Context;
 
@@ -30,5 +31,6 @@ public class ApplicationContext : DbContext
     public ApplicationContext(DbContextOptions<ApplicationContext> options) : base(options)
     {
     }
+    
     
 }

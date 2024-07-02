@@ -59,7 +59,7 @@ public class Employee
     [ForeignKey(nameof(PeoplePartner))]
     public int? PeoplePartnerId { get; set; }
     
-    public ICollection<EmployeeRole> Roles { get;} = new List<EmployeeRole>();
+    public ICollection<EmployeeRole> Roles { get; set; } = new List<EmployeeRole>();
     
     //public ICollection<Authority> Authorities { get; set; } = null!;
     
