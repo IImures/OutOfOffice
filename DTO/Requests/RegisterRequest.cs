@@ -20,6 +20,7 @@ public class RegisterRequest
     public int? PeoplePartnerId { get; set; }
     
     [Required] 
+    [MinLength(1)]
     public int[] RolesId { get; set; } = null!;
     [Required] 
     [MaxLength(50)] 
