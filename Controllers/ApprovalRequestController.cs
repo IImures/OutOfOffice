@@ -8,14 +8,14 @@ namespace OutOfOffice.Controllers;
 
 [Route("list/approval-requests")]
 [ApiController]
-public class ApprovalRequestController(IAprovalRequestService _aprovalRequestService) : ControllerBase
+public class ApprovalRequestController(IAprovalRequestService _approvalRequestService) : ControllerBase
 {
     [HttpGet]
     public async Task<IActionResult> GetApprovalRequests(
         [FromQuery] PageRequest request
         )
     {
-        var pageList = await _aprovalRequestService.GetApprovalRequests(request);
+        var pageList = await _approvalRequestService.GetApprovalRequests(request);
         var response = new PageListResponse<ApprovalRequestResponse>()
         {
             CurrentPage = pageList.CurrentPage,
@@ -31,15 +31,15 @@ public class ApprovalRequestController(IAprovalRequestService _aprovalRequestSer
     [HttpGet("{id}")]
     public async Task<IActionResult> GetApprovalRequest(int id)
     {
-        return Ok(await _aprovalRequestService.GetApprovalRequest(id));
+        return Ok(await _approvalRequestService.GetApprovalRequest(id));
     }
     
-    [HttpPost]
+    // [HttpPost]
     public async Task<IActionResult> AddApprovalRequest(
         [FromBody] AddApprovalRequestRequest request
     )
     {
-        await _aprovalRequestService.AddApprovalRequest(request);
+        await _approvalRequestService.AddApprovalRequest(request);
         return Created();
     }
     
@@ -49,13 +49,13 @@ public class ApprovalRequestController(IAprovalRequestService _aprovalRequestSer
         [FromBody] UpdateApprovalRequestRequest request
     )
     {
-        return Ok( await _aprovalRequestService.UpdateApprovalRequest(id, request));
+        return Ok( await _approvalRequestService.UpdateApprovalRequest(id, request));
     }
     
     [HttpDelete("{id}")]
     public async Task<IActionResult> DeleteApprovalRequest(int id)
     {
-        await _aprovalRequestService.DeleteApprovalRequest(id);
+        await _approvalRequestService.DeleteApprovalRequest(id);
         return NoContent();
     }
 }

@@ -23,9 +23,8 @@ public class LeaveRequest
     [Column("end_date")]
     public DateTime EndDate { get; set; }
     
-    [Required]
     [Column("comment", TypeName= "text")]
-    public string Comment { get; set; } = null!;
+    public string? Comment { get; set; }
     
     [Required]
     [Column("leave_request_status_id")]
@@ -33,4 +32,11 @@ public class LeaveRequest
     
     [ForeignKey(nameof(Status))]
     public int LeaveRequestStatusId { get; set; }
+    
+    [Required]
+    [Column("employee_id")]
+    public Employee Employee { get; set; } = null!;
+    
+    [ForeignKey(nameof(Employee))]
+    public int EmployeeId { get; set; }
 }

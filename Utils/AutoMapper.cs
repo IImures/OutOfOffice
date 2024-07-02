@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using OutOfOffice.DTO.Requests;
 using OutOfOffice.DTO.Responses;
 using OutOfOffice.Entities;
 
@@ -16,6 +17,10 @@ public class AutoMapper : Profile
         
         CreateMap<ApprovalRequest, ApprovalRequestResponse>()
             .ForMember(dest => dest.Status, opt => opt.MapFrom(src => src.ApprovalStatus.Status))
+            .ForMember(dest => dest.Employee, opt => opt.MapFrom(src => src.Employee));
+        
+        CreateMap<LeaveRequest, LeaveRequestResponse>()
+            .ForMember(dest => dest.Status, opt => opt.MapFrom(src => src.Status.Status))
             .ForMember(dest => dest.Employee, opt => opt.MapFrom(src => src.Employee));
     }
 }

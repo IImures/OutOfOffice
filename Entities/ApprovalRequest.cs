@@ -10,9 +10,8 @@ public class ApprovalRequest
     [Column("id")]
     public int Id { get; set; }
     
-    [Required]
     [Column("comment", TypeName = "text")]
-    public string Comment { get; set; } = null!;
+    public string? Comment { get; set; }
     
     [Required]
     [Column("approval_status_id")]

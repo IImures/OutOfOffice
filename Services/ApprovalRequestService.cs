@@ -32,6 +32,7 @@ public class ApprovalRequestService(ApplicationContext _context, IMapper _mapper
         var approvalRequestResponses = pagedApprovalRequests.Select(a => new ApprovalRequestResponse
         {
             Id = a.Id,
+            LeaveRequestId = a.LeaveRequest.Id,
             Comment = a.Comment,
             Status = a.ApprovalStatus.Status,
             Employee = _mapper.Map<EmployeeResponse>(a.Employee)
@@ -132,6 +133,7 @@ public class ApprovalRequestService(ApplicationContext _context, IMapper _mapper
             .Include(a => a.Employee)
             .ThenInclude(e => e.Roles)
             .ThenInclude(er => er.Role)
+            .Include(a => a.LeaveRequest)
             .Include(a => a.ApprovalStatus);
         return query;
     }

@@ -20,6 +20,6 @@ public static class ApprovalStatusType
 {
     public static readonly string Pending = "Pending";
     public static readonly string Approved = "Approved";
-    public static readonly string Rejected = "Rejected";
+    public static readonly string Canceled = "Canceled";
     public static readonly string Deleted = "Deleted";
 }

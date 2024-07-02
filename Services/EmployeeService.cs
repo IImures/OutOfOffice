@@ -4,18 +4,18 @@ using OutOfOffice.DTO.Requests;
 using OutOfOffice.Entities;
 using OutOfOffice.Utils;
 using System.Linq.Dynamic.Core;
+using AutoMapper;
 using OutOfOffice.DTO.Responses;
 using OutOfOffice.Exceptions;
 
 namespace OutOfOffice.Services;
 
-public class EmployeeService(ApplicationContext context, IAuthService authService) : IEmployeeService
+public class EmployeeService(ApplicationContext _context, IAuthService authService, IMapper _mapper) : IEmployeeService
 {
     
     private static readonly string[] AllowedSortColumns = { "id", "fullName", "outOffOfficeBalance", "subdivision", "position", "status" };
     private static readonly string[] AllowedSortDirections = { "asc", "desc" };
-
-    private readonly ApplicationContext _context = context;
+    
 
     public async Task<PagedList<EmployeeResponse>> GetEmployees(PageRequest request)
     {
@@ -38,17 +38,7 @@ public class EmployeeService(ApplicationContext context, IAuthService authServic
         query = query.OrderBy(sorting);
         
         var pagedEmployees = await PagedList<Employee>.ToPagedListAsync(query, request.Page, request.PageSize);
-        var employeeResponses = pagedEmployees.Select(e => new EmployeeResponse
-        {
-            Id = e.Id,
-            FullName = e.FullName,
-            OutOfOfficeBalance = e.OutOfOfficeBalance,
-            Subdivision = e.Subdivision.Name,
-            Position = e.Position.Name,
-            Status = e.Status.Status,
-            Roles = e.Roles.Select(empRole => empRole.Role.RoleName).ToList(),
-            PartnerId = e.PeoplePartnerId
-        }).ToList();
+        var employeeResponses = pagedEmployees.Select(e => _mapper.Map<EmployeeResponse>(e)).ToList();
 
         return new PagedList<EmployeeResponse>(employeeResponses, pagedEmployees.TotalCount, pagedEmployees.CurrentPage, pagedEmployees.PageSize);
     }
@@ -56,16 +46,7 @@ public class EmployeeService(ApplicationContext context, IAuthService authServic
     public async Task<EmployeeResponse> GetEmployee(int id)
     {
         var emp = await GetEmployeeById(id);
-        return new EmployeeResponse()
-        {
-            FullName = emp.FullName,
-            OutOfOfficeBalance = emp.OutOfOfficeBalance,
-            Subdivision = emp.Subdivision.Name,
-            Position = emp.Position.Name,
-            Status = emp.Status.Status,
-            Roles = emp.Roles.Select(empRole => empRole.Role.RoleName).ToList(),
-            PartnerId = emp.PeoplePartnerId
-        };
+        return _mapper.Map<EmployeeResponse>(emp);
     }
 
     public async Task<EmployeeResponse> AddEmployee(RegisterRequest request)
@@ -126,17 +107,7 @@ public class EmployeeService(ApplicationContext context, IAuthService authServic
 
         await _context.SaveChangesAsync();
 
-        return new EmployeeResponse()
-        {
-            Id = emp.Id,
-            FullName = emp.FullName,
-            OutOfOfficeBalance = emp.OutOfOfficeBalance,
-            Subdivision = emp.Subdivision.Name,
-            Position = emp.Position.Name,
-            Status = emp.Status.Status,
-            Roles = emp.Roles.Select(empRole => empRole.Role.RoleName).ToList(),
-            PartnerId = emp.PeoplePartnerId
-        };
+        return _mapper.Map<EmployeeResponse>(emp);
     }
 
     public async Task DeactivateEmployee(int id)
