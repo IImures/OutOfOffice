@@ -24,6 +24,15 @@ export class JwtParserService {
       return null;
     }
   }
+
+  public hasRole(role: string): boolean {
+    const token= this.getDecodedJwtToken();
+    if(!token){
+      return false;
+    }
+    return token.Roles.includes(role);
+  }
+
 }
 
 export interface JwtDecode {

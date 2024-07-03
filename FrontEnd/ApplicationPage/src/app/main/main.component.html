@@ -4,19 +4,11 @@
     <nav id="sidebarMenu" class="col-md-3 col-lg-2 d-md-block navbar-dark	 sidebar collapse">
       <div class="position-sticky pt-3">
         <ul class="nav flex-column">
-          <li class="nav-item">
-            <a class="nav-link active" aria-current="page" href="#">
-              Dashboard
-            </a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#">
-              Speed
-            </a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#">
-              Orders
+          <li class="nav-item" *ngFor="let table of tables"
+              [hidden]="!hasRole(table.roles)"
+          >
+            <a class ="nav-link">
+              {{table.tn}}
             </a>
           </li>
         </ul>
@@ -27,7 +19,7 @@
     <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
       <p class="text-light">Welcome to the dashboard, {{fullName}}!</p>
       <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-        <h1 class="h2 text-light">Dashboard</h1>
+        <h1 class="h2 text-light">Dashboard | {{roles}}</h1>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#sidebarMenu" aria-controls="sidebarMenu" aria-expanded="false" aria-label="Toggle navigation">
           <span class="navbar-toggler-icon"><i class="bi bi-list"></i></span>
         </button>
@@ -35,3 +27,4 @@
       <!-- Your page content here -->
     </main>
   </div>
+</div>
