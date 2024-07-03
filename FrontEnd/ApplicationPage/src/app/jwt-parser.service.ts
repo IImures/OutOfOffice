@@ -14,8 +14,9 @@ export class JwtParserService {
     try{
       const token = this.storageService.getItem('token');
       if (!token) {
-        this.router.navigate(['/login']);
-        return null;
+        console.log("decoded token not found");
+        // this.router.navigate(['/login']);
+         return null;
       }
       return jwtDecode<JwtDecode>(token);
     }

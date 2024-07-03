@@ -34,16 +34,18 @@
 
     <div class="sort-controls d-flex justify-content-center my-3">
       <div class="me-3">
-        <label class="form-label me-2">Sort By:</label>
+        <label class="form-label text-secondary me-2">Sort By:</label>
         <select class="form-select d-inline-block w-auto" [(ngModel)]="sortBy" (change)="onSortChange(sortBy, sortDirection)">
           <option value="id">ID</option>
           <option value="type">Project Type</option>
           <option value="status">Project Status</option>
           <option value="ProjectManager">Project Manager</option>
+          <option value="startDate">Start Date</option>
+          <option value="endDate">End Date</option>
         </select>
       </div>
       <div>
-        <label class="form-label me-2">Sort Direction:</label>
+        <label class="form-label text-secondary me-2">Sort Direction:</label>
         <select class="form-select d-inline-block w-auto" [(ngModel)]="sortDirection" (change)="onSortChange(sortBy, sortDirection)">
           <option value="asc">Ascending</option>
           <option value="desc">Descending</option>

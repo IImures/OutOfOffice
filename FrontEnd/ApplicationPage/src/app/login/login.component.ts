@@ -22,20 +22,17 @@ export class LoginComponent implements OnInit {
   ngOnInit(): void {}
 
   onLogin() {
-    console.log(this.username, this.password);
     const login: Login = {
       login: this.username,
       password: this.password,
     }
     this.authService.login(login).subscribe({
       next: (result) => {
-        console.log(result + " from login");
         this.authService.saveData(result);
         this.router.navigate(['/main']);
       },
       error: (error) => {
         this.errorMessage = 'Login failed: ' + (error.error?.message || 'Unknown error');
-        console.log(error);
       }
     });
   }

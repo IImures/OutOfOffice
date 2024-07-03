@@ -9,6 +9,7 @@
       <th scope="col">End Date</th>
       <th scope="col">Leave Status</th>
       <th scope="col">Comment</th>
+      <th [hidden]="!hasRole(['EMP'])" scope="col">Actions</th>
     </tr>
     </thead>
     <tbody>
@@ -20,6 +21,10 @@
       <td>{{ leaveRequest.endDate | date: 'short' }}</td>
       <td>{{ leaveRequest.status }}</td>
       <td>{{ leaveRequest.comment }}</td>
+      <td [hidden]="!hasRole(['EMP'])">
+        <button class="btn btn-success me-2" [hidden]="leaveRequest.status === 'Submitted'" (click)="onSubmit(leaveRequest)">Submit</button>
+        <button class="btn btn-danger" [hidden]="leaveRequest.status === 'Canceled'" (click)="onCancel(leaveRequest)">Cancel</button>
+      </td>
     </tr>
     </tbody>
   </table>
@@ -34,16 +39,17 @@
 
     <div class="sort-controls d-flex justify-content-center my-3">
       <div class="me-3">
-        <label class="form-label me-2">Sort By:</label>
+        <label class="form-label text-secondary me-2">Sort By:</label>
         <select class="form-select d-inline-block w-auto" [(ngModel)]="sortBy" (change)="onSortChange(sortBy, sortDirection)">
           <option value="id">ID</option>
           <option value="status">Leave Status</option>
-          <option value="start_date">Start date</option>
-          <option value="End_date">End date</option>
+          <option value="startDate">Start date</option>
+          <option value="endDate">End date</option>
+          <option value="absenceReason">Absence Reason</option>
         </select>
       </div>
       <div>
-        <label class="form-label me-2">Sort Direction:</label>
+        <label class="form-label text-secondary me-2">Sort Direction:</label>
         <select class="form-select d-inline-block w-auto" [(ngModel)]="sortDirection" (change)="onSortChange(sortBy, sortDirection)">
           <option value="asc">Ascending</option>
           <option value="desc">Descending</option>

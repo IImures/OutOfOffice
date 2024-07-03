@@ -1,7 +1,8 @@
-import {Component, OnInit} from '@angular/core';
+import {AfterViewInit, Component, OnInit} from '@angular/core';
 import {Router, RouterLink, RouterLinkActive, RouterOutlet} from "@angular/router";
 import {JwtParserService} from "../jwt-parser.service";
 import {NgForOf, NgIf} from "@angular/common";
+import {AuthService} from "../auth.service";
 
 @Component({
   selector: 'app-main',
@@ -16,7 +17,7 @@ import {NgForOf, NgIf} from "@angular/common";
   templateUrl: './main.component.html',
   styleUrl: './main.component.scss'
 })
-export class MainComponent implements OnInit {
+export class MainComponent implements AfterViewInit {
   public fullName: string = "Test";
   public roles : string[] = [];
   public tables = [
@@ -26,13 +27,18 @@ export class MainComponent implements OnInit {
     {tn: "Approval Requests", roles:["HR", "PM"], href:"approval-requests"},
   ]
 
-  constructor(private jwtParser: JwtParserService, private router: Router) { }
+  constructor(
+    private jwtParser: JwtParserService,
+    private authService: AuthService,
+    private router: Router
+  ) { }
 
-  ngOnInit(): void {
+  ngAfterViewInit(): void {
     try {
       const decodedToken = this.jwtParser.getDecodedJwtToken();
       if(!decodedToken) {
-        this.router.navigate(['/login']);
+        console.log('main naviagte');
+        //this.router.navigate(['/login']);
         return;
       }
       this.fullName = decodedToken.name;
@@ -40,8 +46,12 @@ export class MainComponent implements OnInit {
 
     } catch (error) {
       console.error('Invalid token:', error);
-      this.router.navigate(['/login']);
+      //this.router.navigate(['/login']);
     }
+  }
+
+  logout(){
+    this.authService.logout();
   }
 
   hasRole(roles: string[]): boolean {

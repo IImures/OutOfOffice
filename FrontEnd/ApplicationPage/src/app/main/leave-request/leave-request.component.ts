@@ -1,17 +1,19 @@
 import {Component, OnInit} from '@angular/core';
-import {DatePipe, NgForOf} from "@angular/common";
+import {DatePipe, NgForOf, NgIf} from "@angular/common";
 import {FormsModule} from "@angular/forms";
 import {LeaveItem, LeaveRequestService, LeaveResponse} from "../leave-request.service";
 import {ProjectService} from "../project.service";
+import {JwtParserService} from "../../jwt-parser.service";
 
 @Component({
   selector: 'app-leave-request',
   standalone: true,
-    imports: [
-        DatePipe,
-        FormsModule,
-        NgForOf
-    ],
+  imports: [
+    DatePipe,
+    FormsModule,
+    NgForOf,
+    NgIf
+  ],
   templateUrl: './leave-request.component.html',
   styleUrl: './leave-request.component.scss'
 })
@@ -25,10 +27,17 @@ export class LeaveRequestComponent implements OnInit {
 
   constructor(
     private leaveService: LeaveRequestService,
+    private jwtParser : JwtParserService
     ) {}
 
   ngOnInit(): void {
     this.loadRequests();
+    let roles = this.jwtParser.getDecodedJwtToken()?.role
+  }
+
+  hasRole(roles: string[]): boolean {
+    return <boolean>roles.some(role => this.jwtParser.hasRole(role));
+
   }
 
   loadRequests(): void {
@@ -54,5 +63,33 @@ export class LeaveRequestComponent implements OnInit {
     this.sortBy = sortBy;
     this.sortDirection = sortDirection;
     this.loadRequests();
+  }
+
+  onSubmit(leaveRequest: LeaveItem) {
+    this.leaveService.submitRequest(leaveRequest).subscribe(
+      {
+        next: (response) => {
+          console.log(response);
+          this.loadRequests();
+        },
+        error: err => {
+          console.log(err);
+        }
+      }
+    );
+  }
+
+  onCancel(leaveRequest: LeaveItem) {
+    this.leaveService.cancelRequest(leaveRequest).subscribe(
+      {
+        next: (response) => {
+          console.log(response);
+          this.loadRequests();
+        },
+        error: err => {
+          console.log(err);
+        }
+      }
+    )
   }
 }

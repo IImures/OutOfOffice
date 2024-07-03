@@ -3,6 +3,7 @@ import {HttpClient, HttpHeaders, HttpParams} from "@angular/common/http";
 import {JwtParserService} from "../jwt-parser.service";
 import {LocalStorageService} from "../local-storage.service";
 import {Observable} from "rxjs";
+import {ApprovalRequestResponse} from "./approve-request.service";
 
 @Injectable({
   providedIn: 'root'
@@ -28,6 +29,16 @@ export class LeaveRequestService {
     }else {
       return this.http.get<LeaveResponse>(this.api, {headers: headers, params});
     }
+  }
+
+  public submitRequest(leaveRequest: LeaveItem): Observable<LeaveItem> {
+    const headers = new HttpHeaders().set('Authorization', `Bearer ${this.storage.getItem('token')}`);
+    return this.http.post<LeaveItem>(this.api + '/' +  leaveRequest.id + '/approve-requests', headers);
+  }
+
+  public cancelRequest(leaveRequest: LeaveItem): Observable<any> {
+    const headers = new HttpHeaders().set('Authorization', `Bearer ${this.storage.getItem('token')}`);
+    return this.http.delete<LeaveItem>(this.api + '/' + leaveRequest.id, {headers: headers});
   }
 
 }
