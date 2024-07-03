@@ -1,0 +1,54 @@
+<div class="container mt-5">
+  <table class="table table-bordered table-striped">
+    <thead class="thead-dark">
+    <tr>
+      <th scope="col">ID</th>
+      <th scope="col">Project Status</th>
+      <th scope="col">Project Type</th>
+      <th scope="col">Start Date</th>
+      <th scope="col">End Date</th>
+      <th scope="col">Project Manager</th>
+      <th scope="col">Comment</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr *ngFor="let project of projects">
+      <td>{{ project.id }}</td>
+      <td>{{ project.projectStatus }}</td>
+      <td>{{ project.projectType }}</td>
+      <td>{{ project.startDate | date: 'short' }}</td>
+      <td>{{ project.endDate | date: 'short' }}</td>
+      <td>{{ project.projectManager }}</td>
+      <td>{{ project.comment }}</td>
+    </tr>
+    </tbody>
+  </table>
+
+  <div class="row mt-3">
+
+    <div class="pagination-controls d-flex justify-content-center my-3">
+      <button class="btn btn-primary me-2" (click)="onPageChange(currentPage - 1)" [disabled]="currentPage === 1">Previous</button>
+      <span class="align-self-center text-primary">Page {{currentPage}} of {{totalPages}}</span>
+      <button class="btn btn-primary ms-2" (click)="onPageChange(currentPage + 1)" [disabled]="currentPage === totalPages">Next</button>
+    </div>
+
+    <div class="sort-controls d-flex justify-content-center my-3">
+      <div class="me-3">
+        <label class="form-label me-2">Sort By:</label>
+        <select class="form-select d-inline-block w-auto" [(ngModel)]="sortBy" (change)="onSortChange(sortBy, sortDirection)">
+          <option value="id">ID</option>
+          <option value="type">Project Type</option>
+          <option value="status">Project Status</option>
+          <option value="ProjectManager">Project Manager</option>
+        </select>
+      </div>
+      <div>
+        <label class="form-label me-2">Sort Direction:</label>
+        <select class="form-select d-inline-block w-auto" [(ngModel)]="sortDirection" (change)="onSortChange(sortBy, sortDirection)">
+          <option value="asc">Ascending</option>
+          <option value="desc">Descending</option>
+        </select>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,54 @@
+<div class="container mt-5">
+  <table class="table table-bordered table-striped">
+    <thead class="thead-dark">
+    <tr>
+      <th scope="col">ID</th>
+      <th scope="col">Absence Reason</th>
+      <th scope="col">Employee</th>
+      <th scope="col">Start Date</th>
+      <th scope="col">End Date</th>
+      <th scope="col">Leave Status</th>
+      <th scope="col">Comment</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr *ngFor="let leaveRequest of leaveRequests">
+      <td>{{ leaveRequest.id }}</td>
+      <td>{{ leaveRequest.absenceReason }}</td>
+      <td>{{ leaveRequest.employee.fullName }}</td>
+      <td>{{ leaveRequest.startDate | date: 'short' }}</td>
+      <td>{{ leaveRequest.endDate | date: 'short' }}</td>
+      <td>{{ leaveRequest.status }}</td>
+      <td>{{ leaveRequest.comment }}</td>
+    </tr>
+    </tbody>
+  </table>
+
+  <div class="row mt-3">
+
+    <div class="pagination-controls d-flex justify-content-center my-3">
+      <button class="btn btn-primary me-2" (click)="onPageChange(currentPage - 1)" [disabled]="currentPage === 1">Previous</button>
+      <span class="align-self-center text-primary">Page {{currentPage}} of {{totalPages}}</span>
+      <button class="btn btn-primary ms-2" (click)="onPageChange(currentPage + 1)" [disabled]="currentPage === totalPages">Next</button>
+    </div>
+
+    <div class="sort-controls d-flex justify-content-center my-3">
+      <div class="me-3">
+        <label class="form-label me-2">Sort By:</label>
+        <select class="form-select d-inline-block w-auto" [(ngModel)]="sortBy" (change)="onSortChange(sortBy, sortDirection)">
+          <option value="id">ID</option>
+          <option value="status">Leave Status</option>
+          <option value="start_date">Start date</option>
+          <option value="End_date">End date</option>
+        </select>
+      </div>
+      <div>
+        <label class="form-label me-2">Sort Direction:</label>
+        <select class="form-select d-inline-block w-auto" [(ngModel)]="sortDirection" (change)="onSortChange(sortBy, sortDirection)">
+          <option value="asc">Ascending</option>
+          <option value="desc">Descending</option>
+        </select>
+      </div>
+    </div>
+  </div>
+</div>

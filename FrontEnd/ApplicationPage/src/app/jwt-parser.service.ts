@@ -30,14 +30,15 @@ export class JwtParserService {
     if(!token){
       return false;
     }
-    return token.Roles.includes(role);
+    return token.role.includes(role);
   }
 
 }
 
 export interface JwtDecode {
-  Name: string,
-  Roles: string[],
+  name: string,
+  role: string[],
+  id: string
   exp: string,
   issuer: string,
   aud: string

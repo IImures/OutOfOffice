@@ -1,0 +1,51 @@
+<div class="container mt-5">
+  <table class="table table-bordered table-striped">
+    <thead class="thead-dark">
+    <tr>
+      <th scope="col">ID</th>
+      <th scope="col">Leave Request Id</th>
+      <th scope="col">Employee</th>
+      <th scope="col">Status</th>
+      <th scope="col">Comment</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr *ngFor="let approveRequest of approveRequests">
+      <td>{{ approveRequest.id }}</td>
+      <td>{{ approveRequest.leaveRequestId }}</td>
+      <td>{{ approveRequest.employee.fullName }}</td>
+      <td>{{ approveRequest.status }}</td>
+      <td>{{ approveRequest.comment }}</td>
+    </tr>
+    </tbody>
+  </table>
+
+  <div class="row mt-3">
+
+    <div class="pagination-controls d-flex justify-content-center my-3">
+      <button class="btn btn-primary me-2" (click)="onPageChange(currentPage - 1)" [disabled]="currentPage === 1">Previous</button>
+      <span class="align-self-center text-primary">Page {{currentPage}} of {{totalPages}}</span>
+      <button class="btn btn-primary ms-2" (click)="onPageChange(currentPage + 1)" [disabled]="currentPage === totalPages">Next</button>
+    </div>
+
+    <div class="sort-controls d-flex justify-content-center my-3">
+      <div class="me-3">
+        <label class="form-label me-2">Sort By:</label>
+        <select class="form-select d-inline-block w-auto" [(ngModel)]="sortBy" (change)="onSortChange(sortBy, sortDirection)">
+          <option value="id">ID</option>
+          <option value="status">Approval Status</option>
+          <option value="full_name">Employee</option>
+          <option value="comment">Comment</option>
+          <option value="LeaveRequestId">Leave Request Id</option>
+        </select>
+      </div>
+      <div>
+        <label class="form-label me-2">Sort Direction:</label>
+        <select class="form-select d-inline-block w-auto" [(ngModel)]="sortDirection" (change)="onSortChange(sortBy, sortDirection)">
+          <option value="asc">Ascending</option>
+          <option value="desc">Descending</option>
+        </select>
+      </div>
+    </div>
+  </div>
+</div>

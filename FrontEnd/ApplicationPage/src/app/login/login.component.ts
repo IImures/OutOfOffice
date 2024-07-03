@@ -30,6 +30,7 @@ export class LoginComponent implements OnInit {
     this.authService.login(login).subscribe({
       next: (result) => {
         console.log(result + " from login");
+        this.authService.saveData(result);
         this.router.navigate(['/main']);
       },
       error: (error) => {

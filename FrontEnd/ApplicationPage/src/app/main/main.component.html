@@ -1,13 +1,11 @@
 <div class="container-fluid">
   <div class="row flex-grow-1">
     <!-- Sidebar -->
-    <nav id="sidebarMenu" class="col-md-3 col-lg-2 d-md-block navbar-dark	 sidebar collapse">
+    <nav id="sidebarMenu" class="col-md-3 col-lg-2 d-md-block navbar-dark sidebar collapse show">
       <div class="position-sticky pt-3">
         <ul class="nav flex-column">
-          <li class="nav-item" *ngFor="let table of tables"
-              [hidden]="!hasRole(table.roles)"
-          >
-            <a class ="nav-link">
+          <li class="nav-item" *ngFor="let table of tables" [hidden]="!hasRole(table.roles)">
+            <a class="nav-link" [routerLink]="table.href">
               {{table.tn}}
             </a>
           </li>
@@ -23,6 +21,9 @@
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#sidebarMenu" aria-controls="sidebarMenu" aria-expanded="false" aria-label="Toggle navigation">
           <span class="navbar-toggler-icon"><i class="bi bi-list"></i></span>
         </button>
+      </div>
+      <div>
+        <router-outlet></router-outlet>
       </div>
       <!-- Your page content here -->
     </main>
