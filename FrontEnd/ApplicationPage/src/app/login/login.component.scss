@@ -1,0 +1,21 @@
+.main-div{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  align-content: center;
+  background: #424449;
+  left: calc(50% - 10rem);
+  bottom: calc(50% - 10rem);
+  position: absolute;
+  width: 20rem;
+  height: 20rem;
+  border-radius: 2rem;
+}
+
+h2{
+  font-size: 3rem;
+  color: #fff;
+}
+label{
+  color: #fff;
+}
