@@ -5,11 +5,12 @@ import {RoleGuard} from "./role-guard.service";
 import {ProjectTableComponent} from "./main/project-table/project-table.component";
 import {LeaveRequestComponent} from "./main/leave-request/leave-request.component";
 import {ApproveRequestComponent} from "./main/approve-request/approve-request.component";
+import {EmployeeTableComponent} from "./main/employee-table/employee-table.component";
 
 export const routes: Routes = [
   {
     path: '',
-    redirectTo: '/login',
+    redirectTo: '/main',
     pathMatch: 'full',
   },
   {
@@ -37,6 +38,12 @@ export const routes: Routes = [
       {
         path: 'approval-requests',
         component: ApproveRequestComponent,
+        canActivate: [RoleGuard],
+        data: {roles: ['PM', 'HR']}
+      },
+      {
+        path: 'employees',
+        component: EmployeeTableComponent,
         canActivate: [RoleGuard],
         data: {roles: ['PM', 'HR']}
       }
