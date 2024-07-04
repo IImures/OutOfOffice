@@ -2,7 +2,6 @@ import {Component, OnInit} from '@angular/core';
 import {DatePipe, NgForOf, NgIf} from "@angular/common";
 import {FormsModule} from "@angular/forms";
 import {LeaveItem, LeaveRequestService, LeaveResponse} from "../leave-request.service";
-import {ProjectService} from "../project.service";
 import {JwtParserService} from "../../jwt-parser.service";
 
 @Component({
@@ -37,7 +36,6 @@ export class LeaveRequestComponent implements OnInit {
 
   hasRole(roles: string[]): boolean {
     return <boolean>roles.some(role => this.jwtParser.hasRole(role));
-
   }
 
   loadRequests(): void {

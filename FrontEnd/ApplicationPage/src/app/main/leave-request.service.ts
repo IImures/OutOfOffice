@@ -3,7 +3,7 @@ import {HttpClient, HttpHeaders, HttpParams} from "@angular/common/http";
 import {JwtParserService} from "../jwt-parser.service";
 import {LocalStorageService} from "../local-storage.service";
 import {Observable} from "rxjs";
-import {ApprovalRequestResponse} from "./approve-request.service";
+import {Employee} from "./employee.service";
 
 @Injectable({
   providedIn: 'root'
@@ -59,16 +59,5 @@ export interface LeaveItem {
   status: string;
   absenceReason: string;
   employee: Employee;
-}
-
-export interface Employee {
-  id: number;
-  fullName: string;
-  outOfOfficeBalance: number;
-  subdivision: string;
-  position: string;
-  status: string;
-  roles: string[];
-  partnerId: number | null;
 }
 
