@@ -3,7 +3,7 @@ import {LocalStorageService} from "../local-storage.service";
 import {JwtParserService} from "../jwt-parser.service";
 import {HttpClient, HttpHeaders, HttpParams} from "@angular/common/http";
 import {Observable} from "rxjs";
-import {Employee} from "./leave-request.service";
+import {Employee} from "./employee.service";
 
 @Injectable({
   providedIn: 'root'

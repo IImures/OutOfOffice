@@ -2,6 +2,7 @@ import {Component, OnInit} from '@angular/core';
 import {DatePipe, NgForOf} from "@angular/common";
 import {FormsModule} from "@angular/forms";
 import {ApprovalRequestItem, ApprovalRequestResponse, ApproveRequestService} from "../approve-request.service";
+import {JwtParserService} from "../../jwt-parser.service";
 
 @Component({
   selector: 'app-approve-request',
@@ -22,7 +23,10 @@ export class ApproveRequestComponent implements OnInit{
   sortBy: string = 'id';
   sortDirection: string = 'asc';
 
-  constructor(private approveService: ApproveRequestService) {}
+  constructor(
+    private approveService: ApproveRequestService,
+    private jwtParser : JwtParserService
+  ) {}
 
   ngOnInit(): void {
     this.loadApproveRequests();
@@ -51,5 +55,9 @@ export class ApproveRequestComponent implements OnInit{
     this.sortBy = sortBy;
     this.sortDirection = sortDirection;
     this.loadApproveRequests();
+  }
+
+  hasRole(roles: string[]): boolean {
+    return <boolean>roles.some(role => this.jwtParser.hasRole(role));
   }
 }
