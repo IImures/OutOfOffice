@@ -13,10 +13,15 @@ namespace OutOfOffice.Services;
 
 public class ProjectService(ApplicationContext context, IMapper mapper) : IProjectService
 {
-    private static readonly string[] AllowedSortColumns = { "id", "start_date", "end_date", "ProjectStatusId", "ProjectTypeId", "ProjectManagerId", "comment" };
+    private static readonly string[] AllowedSortColumns = { "id", "startDate", "endDate", "status", "type", "ProjectManager" };
     private static readonly string[] AllowedSortDirections = { "asc", "desc" };
-    
+
     public async Task<PagedList<ProjectResponse>> GetProjects(PageRequest request)
+    {
+        return await GetProjects(request, null);
+    }
+
+    public async Task<PagedList<ProjectResponse>> GetProjects(PageRequest request, int? empId)
     {
         var query = GetProjectsQuery();
         if (!AllowedSortDirections.Contains(request.SortDirection) ||
@@ -27,11 +32,14 @@ public class ProjectService(ApplicationContext context, IMapper mapper) : IProje
         string sorting = $"{request.SortBy} {request.SortDirection}";
         query = query.OrderBy(sorting);
         
+        if(empId != null)
+        {
+            query = query.Where(p => p.ProjectTeams.Any(pt => pt.Employee.Id == empId));
+        }
+        
         var pagedProjects = await PagedList<Project>.ToPagedListAsync(query, request.Page, request.PageSize);
         var projectResponses = pagedProjects.Select(mapper.Map<ProjectResponse>).ToList();
         return new PagedList<ProjectResponse>(projectResponses, pagedProjects.TotalCount, pagedProjects.CurrentPage, pagedProjects.PageSize);
-        
-        
     }
 
     public async Task<ProjectResponse> GetProject(int id)
@@ -128,7 +136,7 @@ public class ProjectService(ApplicationContext context, IMapper mapper) : IProje
         project.Status = status;
         await context.SaveChangesAsync();
     }
-    
+
     private async Task<Project> GetProjectById(int id)
     {
         return await context.Projects
@@ -156,6 +164,7 @@ public class ProjectService(ApplicationContext context, IMapper mapper) : IProje
 
 public interface IProjectService
 {
+    Task<PagedList<ProjectResponse>> GetProjects(PageRequest request, int? empId);
     Task<PagedList<ProjectResponse>> GetProjects(PageRequest request);
     Task<ProjectResponse> GetProject(int id);
     Task AddProject(AddProjectRequest request);

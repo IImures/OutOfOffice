@@ -12,16 +12,26 @@ namespace OutOfOffice.Services;
 public class LeaveRequestService(ApplicationContext _context, IMapper _mapper) : ILeaveRequestService
 {
     
-    private static readonly string[] AllowedSortColumns = { "id", "comment", "status", "startDate", "endDate"};
+    private static readonly string[] AllowedSortColumns = { "id", "comment", "status", "startDate", "endDate", "absenceReason"};
     private static readonly string[] AllowedSortDirections = { "asc", "desc" };
     
     public async Task<PagedList<LeaveRequestResponse>> GetLeaveRequests(PageRequest request)
+    {
+        return await GetLeaveRequests(request, null);
+    }
+
+    public async Task<PagedList<LeaveRequestResponse>> GetLeaveRequests(PageRequest request, int? empId)
     {
         var query = GetLeaveRequestsQuery();
         if (!AllowedSortDirections.Contains(request.SortDirection) ||
             !AllowedSortColumns.Contains(request.SortBy))
         {
             throw new BadRequestParameters("Bad sorting parameters", 400);
+        }
+
+        if (empId != null)
+        {
+            query = query.Where(lr => lr.Employee.Id == empId);
         }
         
         string sorting = $"{request.SortBy} {request.SortDirection}";
@@ -108,7 +118,7 @@ public class LeaveRequestService(ApplicationContext _context, IMapper _mapper) :
         approvalRequest.LeaveRequest = leaveRequest;
 
         var approvalRequestStatus =
-            await _context.ApprovalStatuses.FirstOrDefaultAsync(s => s.Status == ApprovalStatusType.Pending);
+            await _context.ApprovalStatuses.FirstOrDefaultAsync(s => s.Status == ApprovalStatusType.New);
         approvalRequest.ApprovalStatus = approvalRequestStatus!;
         approvalRequest.Employee = leaveRequest.Employee;
 
@@ -152,6 +162,7 @@ public class LeaveRequestService(ApplicationContext _context, IMapper _mapper) :
 
 public interface ILeaveRequestService
 {
+    Task<PagedList<LeaveRequestResponse>> GetLeaveRequests(PageRequest request, int? empId);
     Task<PagedList<LeaveRequestResponse>> GetLeaveRequests(PageRequest request);
     Task<LeaveRequestResponse> GetLeaveRequest(int id);
     

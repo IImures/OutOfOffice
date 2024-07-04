@@ -13,7 +13,7 @@ namespace OutOfOffice.Services;
 public class ApprovalRequestService(ApplicationContext _context, IMapper _mapper) : IAprovalRequestService
 {
     
-    private static readonly string[] AllowedSortColumns = { "id", "comment", "status", "employeeId" };
+    private static readonly string[] AllowedSortColumns = { "id", "comment", "approvalStatus", "employee.fullName", "LeaveRequestId" };
     private static readonly string[] AllowedSortDirections = { "asc", "desc" };
     
     public async Task<PagedList<ApprovalRequestResponse>> GetApprovalRequests(PageRequest request)
@@ -37,7 +37,7 @@ public class ApprovalRequestService(ApplicationContext _context, IMapper _mapper
             Status = a.ApprovalStatus.Status,
             Employee = _mapper.Map<EmployeeResponse>(a.Employee)
         }).ToList();
-        return new PagedList<ApprovalRequestResponse>(approvalRequestResponses, request.Page, request.PageSize, pagedApprovalRequests.TotalCount);
+        return new PagedList<ApprovalRequestResponse>(approvalRequestResponses, pagedApprovalRequests.TotalCount, pagedApprovalRequests.CurrentPage, pagedApprovalRequests.PageSize);
     }
 
     public async Task<ApprovalRequestResponse> GetApprovalRequest(int id)
@@ -115,7 +115,7 @@ public class ApprovalRequestService(ApplicationContext _context, IMapper _mapper
             ?? throw new NotFoundException($"Approval request with id {id} not found", 404);
         
         approvalRequest.ApprovalStatus = await _context.ApprovalStatuses
-            .FirstOrDefaultAsync(s => s.Status == ApprovalStatusType.Deleted)
+            .FirstOrDefaultAsync(s => s.Status == ApprovalStatusType.Rejected)
             ?? throw new NotFoundException("Approval status not found", 404);
         
         await _context.SaveChangesAsync();
