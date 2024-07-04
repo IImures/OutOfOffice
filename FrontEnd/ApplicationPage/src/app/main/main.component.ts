@@ -1,8 +1,9 @@
-import {AfterViewInit, Component, OnInit} from '@angular/core';
-import {Router, RouterLink, RouterLinkActive, RouterOutlet} from "@angular/router";
-import {JwtParserService} from "../jwt-parser.service";
-import {NgForOf, NgIf} from "@angular/common";
-import {AuthService} from "../auth.service";
+import {AfterViewInit, ChangeDetectorRef, Component, OnInit} from '@angular/core';
+import {Router, RouterLink, RouterOutlet} from "@angular/router";
+import { JwtParserService } from "../jwt-parser.service";
+import { AuthService } from "../auth.service";
+import { NgForOf, NgIf } from "@angular/common";
+import { FormsModule } from "@angular/forms";
 
 @Component({
   selector: 'app-main',
@@ -10,15 +11,15 @@ import {AuthService} from "../auth.service";
   imports: [
     NgForOf,
     NgIf,
+    FormsModule,
     RouterOutlet,
-    RouterLink,
-    RouterLinkActive
+    RouterLink
   ],
   templateUrl: './main.component.html',
-  styleUrl: './main.component.scss'
+  styleUrls: ['./main.component.scss']
 })
-export class MainComponent implements AfterViewInit {
-  public fullName: string = "Test";
+export class MainComponent implements OnInit {
+  public fullName: string = "";
   public roles : string[] = [];
   public tables = [
     {tn: "Projects", roles:["HR", "PM", "EMP"], href:"projects"},
@@ -30,14 +31,13 @@ export class MainComponent implements AfterViewInit {
   constructor(
     private jwtParser: JwtParserService,
     private authService: AuthService,
-    private router: Router
   ) { }
 
-  ngAfterViewInit(): void {
+  ngOnInit(): void {
     try {
       const decodedToken = this.jwtParser.getDecodedJwtToken();
       if(!decodedToken) {
-        console.log('main naviagte');
+        console.log('main navigate');
         //this.router.navigate(['/login']);
         return;
       }
@@ -57,6 +57,4 @@ export class MainComponent implements AfterViewInit {
   hasRole(roles: string[]): boolean {
     return roles.some(role => this.jwtParser.hasRole(role));
   }
-
-
 }
