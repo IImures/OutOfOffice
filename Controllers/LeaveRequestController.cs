@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using OutOfOffice.DTO.Requests;
 using OutOfOffice.DTO.Responses;
 using OutOfOffice.Services;
@@ -22,6 +23,31 @@ public class LeaveRequestController(ILeaveRequestService leaveRequestService) : 
             Items = pageList.ToList()
         };
 
+        return Ok(response);
+    }
+    
+    [HttpGet("employees")]
+    [Authorize(Roles = "EMP")]
+    public async Task<IActionResult> GetProjectsForEmp
+    (
+        [FromQuery] PageRequest request
+    )
+    {
+        var user = User.Claims.FirstOrDefault(c => c.Type == "id");
+        if (user == null)
+        {
+            return Unauthorized();
+        }
+
+        var pageList = await leaveRequestService.GetLeaveRequests(request, int.Parse(user.Value));
+        var response = new PageListResponse<LeaveRequestResponse>()
+        {
+            CurrentPage = pageList.CurrentPage,
+            TotalPages = pageList.TotalPages,
+            PageSize = pageList.PageSize,
+            TotalCount = pageList.TotalCount,
+            Items = pageList.ToList()
+        };
         return Ok(response);
     }
 

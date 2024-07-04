@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using OutOfOffice.DTO.Requests;
 using OutOfOffice.DTO.Responses;
 using OutOfOffice.Services;
@@ -11,6 +12,7 @@ namespace OutOfOffice.Controllers;
 public class ApprovalRequestController(IAprovalRequestService _approvalRequestService) : ControllerBase
 {
     [HttpGet]
+    [Authorize(Roles = "HR, PM")]
     public async Task<IActionResult> GetApprovalRequests(
         [FromQuery] PageRequest request
         )
@@ -29,21 +31,23 @@ public class ApprovalRequestController(IAprovalRequestService _approvalRequestSe
     }
     
     [HttpGet("{id}")]
+    [Authorize(Roles = "HR, PM")]
     public async Task<IActionResult> GetApprovalRequest(int id)
     {
         return Ok(await _approvalRequestService.GetApprovalRequest(id));
     }
     
     // [HttpPost]
-    public async Task<IActionResult> AddApprovalRequest(
-        [FromBody] AddApprovalRequestRequest request
-    )
-    {
-        await _approvalRequestService.AddApprovalRequest(request);
-        return Created();
-    }
+    // public async Task<IActionResult> AddApprovalRequest(
+    //     [FromBody] AddApprovalRequestRequest request
+    // )
+    // {
+    //     await _approvalRequestService.AddApprovalRequest(request);
+    //     return Created();
+    // }
     
     [HttpPut("{id}")]
+    [Authorize(Roles = "HR, PM")]
     public async Task<IActionResult> UpdateApprovalRequest(
         int id,
         [FromBody] UpdateApprovalRequestRequest request
@@ -53,6 +57,7 @@ public class ApprovalRequestController(IAprovalRequestService _approvalRequestSe
     }
     
     [HttpDelete("{id}")]
+    [Authorize(Roles = "HR, PM")]
     public async Task<IActionResult> DeleteApprovalRequest(int id)
     {
         await _approvalRequestService.DeleteApprovalRequest(id);
