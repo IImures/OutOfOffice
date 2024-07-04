@@ -2,8 +2,6 @@ import { Injectable } from '@angular/core';
 import {LocalStorageService} from "../local-storage.service";
 import {HttpClient, HttpHeaders, HttpParams} from "@angular/common/http";
 import {Observable} from "rxjs";
-import {ApprovalRequestResponse} from "./approve-request.service";
-import {Employee} from "./leave-request.service";
 
 @Injectable({
   providedIn: 'root'
@@ -26,6 +24,34 @@ export class EmployeeService {
     return this.http.get<EmployeeResponse>(this.api, {headers, params}) ;
   }
 
+  updateEmployee(updateData: UpdateEmployee) : Observable<Employee> {
+    const headers = new HttpHeaders().set('Authorization', `Bearer ${this.storageService.getItem('token')}`);
+    return this.http.put<Employee>(`${this.api}/${updateData.id}`, updateData,{headers: headers}  );
+  }
+}
+
+export interface Employee {
+  id: number;
+  fullName: string;
+  outOfOfficeBalance: number;
+  subdivision: string;
+  position: string;
+  status: string;
+  roles: string[];
+  partnerId: number | null;
+  isEditing?: boolean;
+  updateData: UpdateEmployee;
+}
+
+export interface UpdateEmployee{
+  id: number;
+  fullName: string;
+  outOfOfficeBalance: number;
+  partnerId: number | null;
+  positionId: number |null;
+  rolesId: number[] | null;
+  statusId: number | null;
+  subdivisionId: number | null;
 }
 
 export interface EmployeeResponse {

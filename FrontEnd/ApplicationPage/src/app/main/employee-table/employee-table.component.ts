@@ -1,8 +1,9 @@
 import {Component, OnInit} from '@angular/core';
-import {NgForOf} from "@angular/common";
+import {NgForOf, NgIf} from "@angular/common";
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
-import {Employee} from "../leave-request.service";
-import {EmployeeService} from "../employee.service";
+import {Employee, EmployeeService, UpdateEmployee} from "../employee.service";
+import {JwtParserService} from "../../jwt-parser.service";
+import {Position, Role, Status, StatusesService, Subdivision} from "../statuses.service";
 
 @Component({
   selector: 'app-employee-table',
@@ -10,23 +11,66 @@ import {EmployeeService} from "../employee.service";
   imports: [
     NgForOf,
     ReactiveFormsModule,
-    FormsModule
+    FormsModule,
+    NgIf
   ],
   templateUrl: './employee-table.component.html',
   styleUrl: './employee-table.component.scss'
 })
 export class EmployeeTableComponent implements OnInit{
   employees: Employee[] = [];
+  originalEmployees: { [id: number]: Employee } = {};
+
   currentPage: number = 1;
   totalPages: number = 1;
   pageSize: number = 10;
   sortBy: string = 'id';
   sortDirection: string = 'asc';
 
-  constructor(private employeeService: EmployeeService) {}
+  subdivisions: Subdivision[] = [];
+  positions: Position[] = [];
+  roles: Role[] = [];
+  employeeStatuses: Status[] = [];
+
+  constructor(
+    private employeeService: EmployeeService,
+    private statusesService: StatusesService,
+    private jwtParser: JwtParserService
+    ) {}
 
   ngOnInit(): void {
     this.loadEmployees();
+    this.loadAdditionalData();
+  }
+
+  private loadAdditionalData() {
+    this.statusesService.getEmployeeStatuses()
+      .subscribe({
+        next: (response:Status[]) => {
+          this.employeeStatuses = response;
+        }
+      });
+
+    this.statusesService.getRoles()
+      .subscribe({
+        next: (response:Role[]) => {
+          this.roles = response;
+        }
+      });
+
+    this.statusesService.getPositions()
+      .subscribe({
+        next: (response:Position[]) => {
+          this.positions = response;
+        }
+      });
+
+    this.statusesService.getSubdivisions()
+      .subscribe(
+        (response:Subdivision[]) => {
+          this.subdivisions = response;
+        }
+      )
   }
 
   loadEmployees(): void {
@@ -36,6 +80,10 @@ export class EmployeeTableComponent implements OnInit{
         this.currentPage = response.currentPage;
         this.totalPages = response.totalPages;
         this.pageSize = response.pageSize;
+
+        this.employees.forEach(employee => {
+          this.originalEmployees[employee.id] = {...employee};
+        })
       },
       error: (error) => {
         console.error('Error loading projects:', error);
@@ -53,4 +101,62 @@ export class EmployeeTableComponent implements OnInit{
     this.sortDirection = sortDirection;
     this.loadEmployees();
   }
+
+  hasRole(roles: string[]): boolean {
+    return <boolean>roles.some(role => this.jwtParser.hasRole(role));
+  }
+
+  onUpdate(employee: Employee) {
+    employee.isEditing = true;
+    employee.updateData = {
+      id: employee.id,
+      fullName: employee.fullName,
+      outOfOfficeBalance: employee.outOfOfficeBalance,
+      partnerId: employee.partnerId,
+      positionId: this.positions.find(p => p.position === employee.position)?.id ?? null, // Provide default value
+      rolesId: employee.roles.map(role => this.roles.find(r => r.role === role)?.id).filter(id => id !== undefined) as number[],
+      statusId: this.employeeStatuses.find(s => s.status === employee.status)?.id ?? null, // Provide default value
+      subdivisionId: this.subdivisions.find(s => s.subdivision === employee.subdivision)?.id ?? null // Provide default value
+    };
+  }
+
+
+  onDelete(employee: Employee) {
+
+  }
+
+  onSubmit(employee: Employee){
+    console.log(employee)
+    this.employeeService.updateEmployee(<UpdateEmployee>employee.updateData).subscribe(
+      {
+        next: (response) => {
+          employee.isEditing = false;
+          employee.fullName = response.fullName;
+          employee.outOfOfficeBalance = response.outOfOfficeBalance;
+          employee.subdivision= response.subdivision;
+          employee.partnerId = response.partnerId;
+          employee.position=response.position;
+          employee.roles=response.roles;
+          this.originalEmployees[employee.id] = {...employee};
+        },
+        error: err => {
+          this.onCancel(employee);
+          console.log(err);
+        }
+      }
+    );
+  }
+
+  onCancel(employee: Employee){
+    const original = this.originalEmployees[employee.id];
+    employee.fullName = original.fullName;
+    employee.outOfOfficeBalance = original.outOfOfficeBalance;
+    employee.subdivision = original.subdivision;
+    employee.position = original.position;
+    employee.status = original.status;
+    employee.roles = original.roles;
+    employee.isEditing = false;
+  }
+
+
 }

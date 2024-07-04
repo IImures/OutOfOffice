@@ -10,18 +10,54 @@
       <th scope="col">Status</th>
       <th scope="col">Roles</th>
       <th scope="col">Partner</th>
+      <th [hidden]="!hasRole(['HR'])" scope="col">Actions</th>
     </tr>
     </thead>
     <tbody>
     <tr *ngFor="let employee of employees">
       <td>{{ employee.id }}</td>
-      <td>{{ employee.fullName }}</td>
-      <td>{{ employee.outOfOfficeBalance }}</td>
-      <td>{{ employee.subdivision }}</td>
-      <td>{{ employee.position }}</td>
-      <td>{{ employee.status }}</td>
-      <td>{{ employee.roles }}</td>
-      <td>{{ employee.partnerId }}</td>
+      <td>
+        <span *ngIf="!employee.isEditing"></span>
+        <input *ngIf="employee.isEditing" [(ngModel)]="employee.updateData.fullName" />
+      </td>
+      <td>
+        <span *ngIf="!employee.isEditing">{{ employee.outOfOfficeBalance }}</span>
+        <input *ngIf="employee.isEditing" [(ngModel)]="employee.updateData.outOfOfficeBalance" />
+      </td>
+      <td>
+        <span *ngIf="!employee.isEditing">{{ employee.subdivision }}</span>
+        <select *ngIf="employee.isEditing" [(ngModel)]="employee.updateData.subdivisionId">
+          <option *ngFor="let subdivision of subdivisions" [value]="subdivision.id">{{ subdivision.subdivision }}</option>
+        </select>
+      </td>
+      <td>
+        <span *ngIf="!employee.isEditing">{{ employee.position }}</span>
+        <select *ngIf="employee.isEditing" [(ngModel)]="employee.updateData.positionId">
+          <option *ngFor="let position of positions" [value]="position.id">{{ position.position }}</option>
+        </select>
+      </td>
+      <td>
+        <span *ngIf="!employee.isEditing">{{ employee.status }}</span>
+        <select *ngIf="employee.isEditing" [(ngModel)]="employee.updateData.statusId">
+          <option *ngFor="let status of employeeStatuses" [value]="status.id">{{ status.status }}</option>
+        </select>
+      </td>
+      <td>
+        <span *ngIf="!employee.isEditing">{{ employee.roles.join(', ') }}</span>
+        <select *ngIf="employee.isEditing" multiple [(ngModel)]="employee.updateData.rolesId">
+          <option *ngFor="let role of roles" [value]="role.id">{{ role.role }}</option>
+        </select>
+      </td>
+      <td>
+        <span *ngIf="!employee.isEditing">{{ employee.partnerId }}</span>
+        <input *ngIf="employee.isEditing" [(ngModel)]="employee.partnerId" />
+      </td>
+      <td [hidden]="!hasRole(['HR'])" >
+        <button *ngIf="employee.isEditing" class="btn btn-success me-2" (click)="onSubmit(employee)">Submit</button>
+        <button *ngIf="employee.isEditing" class="btn btn-warning me-2" (click)="onCancel(employee)">Cancel</button>
+        <button *ngIf="!employee.isEditing" class="btn btn-success me-2" (click)="onUpdate(employee)">Update</button>
+        <button *ngIf="!employee.isEditing" class="btn btn-danger me-2" (click)="onDelete(employee)">Delete</button>
+      </td>
     </tr>
     </tbody>
   </table>
