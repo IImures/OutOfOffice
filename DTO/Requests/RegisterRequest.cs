@@ -8,6 +8,9 @@ public class RegisterRequest
     [MaxLength(100)] 
     public string FullName { get; set; } = null!;
     [Required] 
+    [MaxLength(100)] 
+    public string Login { get; set; } = null!;
+    [Required] 
     [Range(0, short.MaxValue, ErrorMessage = "Value for must be greater or equal to 0.")]
     public short OutOfOfficeBalance { get; set; }
     [Required] 

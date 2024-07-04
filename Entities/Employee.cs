@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.EntityFrameworkCore;
 
@@ -16,6 +17,11 @@ public class Employee
     [MaxLength(100)]
     [Column("full_name")]
     public string FullName { get; set; } = null!;
+    
+    [Required]
+    [MaxLength(100)]
+    [Column("login")]
+    public string Login { get; set; } = null!;
     
     [Required]
     [Column("out_of_office_balance")]

@@ -13,7 +13,7 @@ namespace OutOfOffice.Services;
 public class EmployeeService(ApplicationContext _context, IAuthService authService, IMapper _mapper) : IEmployeeService
 {
     
-    private static readonly string[] AllowedSortColumns = { "id", "fullName", "outOffOfficeBalance", "subdivision", "position", "status" };
+    private static readonly string[] AllowedSortColumns = { "id", "fullName", "outOfOfficeBalance", "subdivision.name", "position.name", "status.status" };
     private static readonly string[] AllowedSortDirections = { "asc", "desc" };
     
 
@@ -24,7 +24,7 @@ public class EmployeeService(ApplicationContext _context, IAuthService authServi
             .Include(e => e.Subdivision)
             .Include(e => e.Position)
             .Include(e => e.Status)
-            .Where(e => e.Status.Status != EmployeeStatusType.Inactive)
+            //.Where(e => e.Status.Status != EmployeeStatusType.Inactive)
             .Include(e => e.Roles)
                 .ThenInclude(er=> er.Role)
             .AsQueryable();
@@ -127,7 +127,7 @@ public class EmployeeService(ApplicationContext _context, IAuthService authServi
                    .Include(e => e.Subdivision)
                    .Include(e => e.Position)
                    .Include(e => e.Status)
-                   .Where(e=> e.Status.Status != EmployeeStatusType.Inactive)
+                   //.Where(e=> e.Status.Status != EmployeeStatusType.Inactive)
                    .Include(e => e.Roles)
                    .ThenInclude(er => er.Role)
                    .FirstOrDefaultAsync(e => e.Id == id)

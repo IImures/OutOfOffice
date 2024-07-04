@@ -27,17 +27,18 @@ public class AuthService : IAuthService
     public async Task<EmployeeResponse> RegisterUser(RegisterRequest request)
     {
         var user = await _appContext.Employees
-            .FirstOrDefaultAsync(u => u.FullName == request.FullName);
+            .FirstOrDefaultAsync(u => u.Login == request.Login);
         
         if (user != null)
         {
-            throw new UserExitsException("User with this name already exists", 401);
+            throw new UserExitsException("User with this login already exists", 401);
         }
         
         Employee userToSave = new()
         {
             FullName = request.FullName,
             OutOfOfficeBalance = request.OutOfOfficeBalance,
+            Login = request.Login,
         };
         
         PasswordHasher<Employee> passwordHasher = new();
@@ -108,7 +109,7 @@ public class AuthService : IAuthService
         Employee? user = await  _appContext.Employees
             .Include(e => e.Roles)
             .ThenInclude(r => r.Role)
-            .FirstOrDefaultAsync(u => u.FullName == request.Name);
+            .FirstOrDefaultAsync(u => u.Login == request.Login);
         
         if(user == null)
         {
@@ -136,7 +137,7 @@ public class AuthService : IAuthService
         var handler = new JwtSecurityTokenHandler();
         var token = handler.ReadJwtToken(request.RefreshToken);
         
-        string name = token.Claims.First(claim => claim.Type == ClaimTypes.Name).Value;
+        string name = token.Claims.First(claim => claim.Type == "Name").Value;
         
         Employee? user = await  _appContext.Employees
             .Include(e => e.Roles)
@@ -181,10 +182,11 @@ public class AuthService : IAuthService
 
         var claims = new List<Claim>
         {
-            new Claim(ClaimTypes.Name, user.FullName),
+            new Claim("name", user.FullName),
+            new Claim("id", $"{user.Id}"),
         };
 
-        claims.AddRange(roles.Select(role => new Claim(ClaimTypes.Role, role)));
+        claims.AddRange(roles.Select(role => new Claim("role", role)));
 
         Claim[] userClaims = claims.ToArray();
         
@@ -207,7 +209,7 @@ public class AuthService : IAuthService
     {
         Claim[] userClaims = new[]
         {
-            new Claim(ClaimTypes.Name, user.FullName),
+            new Claim("name", user.FullName),
         };
         
         SymmetricSecurityKey key = new(Encoding.UTF8.GetBytes(_configuration["JWT:RefKey"]!));

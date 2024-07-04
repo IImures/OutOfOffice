@@ -32,5 +32,10 @@ public class ApplicationContext : DbContext
     {
     }
     
-    
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+        modelBuilder.Entity<Employee>()
+            .HasIndex(u => u.Login)
+            .IsUnique();
+    }
 }
