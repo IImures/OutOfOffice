@@ -22,4 +22,5 @@ public static class LeaveStatusType
     public static readonly string Approved = "Approved";
     public static readonly string Canceled = "Canceled";
     public static readonly string Submitted = "Submitted";
+    public static readonly string Rejected = "Rejected";
 }

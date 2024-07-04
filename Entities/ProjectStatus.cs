@@ -17,6 +17,7 @@ public class ProjectStatus
 }
 
 public static class ProjectStatusType {
+    public static readonly string New = "New";
     public static readonly string Active = "Active";
     public static readonly string Inactive = "Inactive";
     public static readonly string Canceled = "Canceled";
