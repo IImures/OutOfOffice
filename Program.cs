@@ -22,6 +22,17 @@ builder.Services.AddDbContext<ApplicationContext>(
     ).LogTo(Console.WriteLine, LogLevel.Information)
 );
 
+builder.Services.AddCors(options =>
+{
+    options.AddDefaultPolicy(
+        builder =>
+        {
+            builder.AllowAnyOrigin()
+                .AllowAnyMethod()
+                .AllowAnyHeader();
+        });
+});
+
 builder.Services.AddAuthentication(options =>
     {
         options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -60,6 +71,7 @@ builder.Services.AddScoped<IEmployeeService, EmployeeService>();
 builder.Services.AddScoped<IAprovalRequestService, ApprovalRequestService>();
 builder.Services.AddScoped<ILeaveRequestService, LeaveRequestService>();
 builder.Services.AddScoped<IProjectService, ProjectService>();
+builder.Services.AddScoped<IStatusService, StatusService>();
 
 var app = builder.Build();
 
@@ -71,5 +83,6 @@ if (app.Environment.IsDevelopment())
 
 app.UseMiddleware<ExceptionHandler>();
 app.UseAuthorization();
+app.UseCors();
 app.MapControllers();
 app.Run();
