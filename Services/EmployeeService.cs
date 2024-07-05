@@ -24,7 +24,7 @@ public class EmployeeService(ApplicationContext _context, IAuthService authServi
             .Include(e => e.Subdivision)
             .Include(e => e.Position)
             .Include(e => e.Status)
-            //.Where(e => e.Status.Status != EmployeeStatusType.Inactive)
+            .Where(e => e.Status.Status != EmployeeStatusType.Deleted)
             .Include(e => e.Roles)
                 .ThenInclude(er=> er.Role)
             .AsQueryable();
@@ -115,9 +115,29 @@ public class EmployeeService(ApplicationContext _context, IAuthService authServi
         var emp = await _context.Employees.FirstOrDefaultAsync(e => e.Id == id)
                   ?? throw new NotFoundException($"Employee not found with id {id}", 404);
         
-        emp.Status = await _context.EmployeeStatuses.FirstOrDefaultAsync(s => s.Status == EmployeeStatusType.Inactive)
+        emp.Status = await _context.EmployeeStatuses.FirstOrDefaultAsync(s => s.Status == EmployeeStatusType.Deleted)
                              ?? throw new NotFoundException("Status not found", 404);
         
+        await _context.SaveChangesAsync();
+    }
+
+    public async Task AddEmployeeToProject(int id, int projectId)
+    {
+        var employee = await GetEmployeeById(id);
+        var project = await _context.Projects
+                          .Include(p => p.ProjectTeams)
+                          .ThenInclude(pt=> pt.Employee)
+                          .FirstOrDefaultAsync(p => p.Id == projectId)
+                      ?? throw new NotFoundException($"Project not found with id {projectId}", 404);
+        if(project.ProjectTeams.Any(pt => pt.Employee.Id == id))
+        {
+            throw new BadRequestParameters("Employee already in project");
+        }
+        project.ProjectTeams.Add(new ProjectTeam
+        {
+            Employee = employee,
+            Project = project
+        });
         await _context.SaveChangesAsync();
     }
 
@@ -127,7 +147,7 @@ public class EmployeeService(ApplicationContext _context, IAuthService authServi
                    .Include(e => e.Subdivision)
                    .Include(e => e.Position)
                    .Include(e => e.Status)
-                   //.Where(e=> e.Status.Status != EmployeeStatusType.Inactive)
+                   .Where(e=> e.Status.Status != EmployeeStatusType.Deleted)
                    .Include(e => e.Roles)
                    .ThenInclude(er => er.Role)
                    .FirstOrDefaultAsync(e => e.Id == id)
@@ -146,4 +166,6 @@ public interface IEmployeeService
     Task<EmployeeResponse> UpdateEmployee(int id, UpdateEmployeeRequest request);
     
     Task DeactivateEmployee(int id);
+    
+    Task AddEmployeeToProject(int id, int projectId);
 }
