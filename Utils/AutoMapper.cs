@@ -13,6 +13,7 @@ public class AutoMapper : Profile
             .ForMember(dest => dest.Position, opt => opt.MapFrom(src => src.Position.Name))
             .ForMember(dest => dest.Subdivision, opt => opt.MapFrom(src => src.Subdivision.Name))
             .ForMember(dest => dest.Status, opt => opt.MapFrom(src => src.Status.Status))
+            .ForMember(dest => dest.PartnerId, opt => opt.MapFrom(src => src.PeoplePartnerId))
             .ForMember(dest => dest.Roles, opt => opt.MapFrom(src => src.Roles.Select(er => er.Role.RoleName).ToList()));
         
         CreateMap<ApprovalRequest, ApprovalRequestResponse>()
