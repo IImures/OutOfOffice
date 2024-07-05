@@ -37,15 +37,6 @@ public class ApprovalRequestController(IAprovalRequestService _approvalRequestSe
         return Ok(await _approvalRequestService.GetApprovalRequest(id));
     }
     
-    // [HttpPost]
-    // public async Task<IActionResult> AddApprovalRequest(
-    //     [FromBody] AddApprovalRequestRequest request
-    // )
-    // {
-    //     await _approvalRequestService.AddApprovalRequest(request);
-    //     return Created();
-    // }
-    
     [HttpPut("{id}")]
     [Authorize(Roles = "HR, PM")]
     public async Task<IActionResult> UpdateApprovalRequest(

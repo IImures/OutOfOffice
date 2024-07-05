@@ -11,6 +11,7 @@ namespace OutOfOffice.Controllers;
 public class LeaveRequestController(ILeaveRequestService leaveRequestService) : ControllerBase
 {
     [HttpGet]
+    [Authorize(Roles = "HR, PM")]
     public async Task<IActionResult> GetLeaveRequests([FromQuery] PageRequest request)
     {
         var pageList = await leaveRequestService.GetLeaveRequests(request);
@@ -28,7 +29,7 @@ public class LeaveRequestController(ILeaveRequestService leaveRequestService) : 
     
     [HttpGet("employees")]
     [Authorize(Roles = "EMP")]
-    public async Task<IActionResult> GetProjectsForEmp
+    public async Task<IActionResult> GetLeaveRequestsForEmployee
     (
         [FromQuery] PageRequest request
     )
@@ -52,12 +53,14 @@ public class LeaveRequestController(ILeaveRequestService leaveRequestService) : 
     }
 
     [HttpGet("{id}")]
+    [Authorize(Roles = "HR, PM, EMP")]
     public async Task<IActionResult> GetLeaveRequest(int id)
     {
         return Ok(await leaveRequestService.GetLeaveRequest(id));
     }
 
     [HttpPost]
+    [Authorize(Roles = "EMP")]
     public async Task<IActionResult> AddLeaveRequest([FromBody] AddLeaveRequestRequest request)
     {
         await leaveRequestService.AddLeaveRequest(request);
@@ -65,19 +68,22 @@ public class LeaveRequestController(ILeaveRequestService leaveRequestService) : 
     }
     
     [HttpPost("{id}/approve-requests")]
-    public async Task<IActionResult> ApproveLeaveRequest(int id)
+    [Authorize(Roles = "EMP")]
+    public async Task<IActionResult> SubmitLeaveRequest(int id)
     {
-        await leaveRequestService.ApproveLeaveRequest(id);
+        await leaveRequestService.SubmitLeaveRequest(id);
         return Ok();
     }
 
     [HttpPut("{id}")]
+    [Authorize(Roles = "EMP")]
     public async Task<IActionResult> UpdateLeaveRequest(int id, [FromBody] UpdateLeaveRequestRequest request)
     {
         return Ok(await leaveRequestService.UpdateLeaveRequest(id, request));
     }
 
     [HttpDelete("{id}")]
+    [Authorize(Roles = "EMP")]
     public async Task<IActionResult> DeleteLeaveRequest(int id)
     {
         await leaveRequestService.DeleteLeaveRequest(id);

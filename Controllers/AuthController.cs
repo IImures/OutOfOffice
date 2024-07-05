@@ -28,6 +28,7 @@ public class AuthController : ControllerBase
     }
     
     [HttpPost("login")]
+    [AllowAnonymous]
     public async Task<IActionResult> Login
     (
         [FromBody] LoginRequest request
@@ -37,6 +38,7 @@ public class AuthController : ControllerBase
     }
     
     [HttpPost("register")]
+    [Authorize(Roles = "HR")]
     public async Task<IActionResult> Register(
         [FromBody] RegisterRequest request
     )

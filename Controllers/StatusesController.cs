@@ -8,28 +8,28 @@ namespace OutOfOffice.Controllers;
 [ApiController]
 public class StatusesController(IStatusService statusService) : ControllerBase
 {
-    //[Authorize]
+    [Authorize]
     [HttpGet("statuses/employees")]
     public async Task<IActionResult> GetEmployeeStatuses()
     {
         return Ok(await statusService.GetEmployeeStatuses());
     }
 
-    //[Authorize]
+    [Authorize]
     [HttpGet("statuses/approval-requests")]
     public async Task<IActionResult> GetApprovalStatuses()
     {
         return Ok(await statusService.GetApprovalStatuses());
     }
 
-    //[Authorize]
+    [Authorize]
     [HttpGet("statuses/project-statuses")]
     public async Task<IActionResult> GetProjectStatuses()
     {
         return Ok(await statusService.GetProjectStatuses());
     }
     
-    //[Authorize]
+    [Authorize]
     [HttpGet("statuses/project-types")]
     public async Task<IActionResult> GetProjectTypes()
     {
@@ -37,28 +37,28 @@ public class StatusesController(IStatusService statusService) : ControllerBase
     }
     
     
-    //[Authorize]
+    [Authorize]
     [HttpGet("statuses/leave-requests")]
     public async Task<IActionResult> GetLeaveRequestStatuses()
     {
         return Ok(await statusService.GetLeaveRequestStatuses());
     }
     
-    //[Authorize]
+    [Authorize]
     [HttpGet("roles")]
     public async Task<IActionResult> GetRoles()
     {
         return Ok(await statusService.GetRoles());
     }
     
-    //[Authorize]
+    [Authorize]
     [HttpGet("subdivisions")]
     public async Task<IActionResult> GetSubdivisions()
     {
         return Ok(await statusService.GetSubdivisions());
     }
     
-    //[Authorize]
+    [Authorize]
     [HttpGet("positions")]
     public async Task<IActionResult> GetPositions()
     {

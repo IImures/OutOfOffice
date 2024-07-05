@@ -20,7 +20,7 @@ public class EmployeeController : ControllerBase
     }
     
     [HttpGet]
-    //[Authorize(Roles = "HR")]
+    [Authorize(Roles = "HR, PM")]
     public async Task<IActionResult> GetEmployees(
         [FromQuery] PageRequest request
         )
@@ -39,12 +39,14 @@ public class EmployeeController : ControllerBase
     }
     
     [HttpGet("{id}")]
+    [Authorize(Roles = "HR, PM")]
     public async Task<IActionResult> GetEmployee(int id)
     {
         return Ok(await _employeeService.GetEmployee(id));
     }
     
     [HttpPost]
+    [Authorize(Roles = "HR")]
     public async Task<IActionResult> AddEmployee(
         [FromBody] RegisterRequest request
     )
@@ -54,6 +56,7 @@ public class EmployeeController : ControllerBase
     }
     
     [HttpPut("{id}")]
+    [Authorize(Roles = "HR")]
     public async Task<IActionResult> UpdateEmployee(
         int id,
         [FromBody] UpdateEmployeeRequest request
@@ -63,9 +66,18 @@ public class EmployeeController : ControllerBase
     }
     
     [HttpDelete("{id}")]
+    [Authorize(Roles = "HR")]
     public async Task<IActionResult> DeactivateEmployee(int id)
     {
         await _employeeService.DeactivateEmployee(id);
         return NoContent();
+    }
+    
+    [HttpPost("{id}/projects/{projectId}")]
+    [Authorize(Roles = "PM")]
+    public async Task<IActionResult> AddEmployeeToProject(int id, int projectId)
+    {
+        await _employeeService.AddEmployeeToProject(id, projectId);
+        return Created();
     }
 }
