@@ -58,7 +58,8 @@ namespace OutOfOffice.Migrations
                 {
                     {EmployeeStatusType.Active},
                     {EmployeeStatusType.Inactive},
-                    {EmployeeStatusType.OnVacation}
+                    {EmployeeStatusType.OnVacation},
+                    {EmployeeStatusType.Deleted}
                 }
             );
 

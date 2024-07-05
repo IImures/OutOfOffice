@@ -21,4 +21,5 @@ public static class EmployeeStatusType {
     public static readonly string Active = "Active";
     public static readonly string Inactive = "Inactive";
     public static readonly string OnVacation = "On Vacation";
+    public static readonly string Deleted = "Deleted";
 }
