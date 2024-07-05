@@ -104,7 +104,7 @@ public class LeaveRequestService(ApplicationContext _context, IMapper _mapper) :
         await _context.SaveChangesAsync();
     }
 
-    public async Task ApproveLeaveRequest(int id)
+    public async Task SubmitLeaveRequest(int id)
     {
         var approvalRequest = new ApprovalRequest();
         
@@ -169,5 +169,5 @@ public interface ILeaveRequestService
     Task AddLeaveRequest(AddLeaveRequestRequest request);
     Task<LeaveRequestResponse> UpdateLeaveRequest(int id, UpdateLeaveRequestRequest request);
     Task DeleteLeaveRequest(int id);
-    Task ApproveLeaveRequest(int id);
+    Task SubmitLeaveRequest(int id);
 }
