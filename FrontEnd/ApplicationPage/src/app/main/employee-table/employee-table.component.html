@@ -9,7 +9,7 @@
       <th scope="col">Position</th>
       <th scope="col">Status</th>
       <th scope="col">Roles</th>
-      <th scope="col">Partner</th>
+      <th scope="col">Partner ID</th>
       <th [hidden]="!hasRole(['HR'])" scope="col">Actions</th>
     </tr>
     </thead>
@@ -17,7 +17,7 @@
     <tr *ngFor="let employee of employees">
       <td>{{ employee.id }}</td>
       <td>
-        <span *ngIf="!employee.isEditing"></span>
+        <span *ngIf="!employee.isEditing">{{employee.fullName}}</span>
         <input *ngIf="employee.isEditing" [(ngModel)]="employee.updateData.fullName" />
       </td>
       <td>
@@ -44,7 +44,7 @@
       </td>
       <td>
         <span *ngIf="!employee.isEditing">{{ employee.roles.join(', ') }}</span>
-        <select *ngIf="employee.isEditing" multiple [(ngModel)]="employee.updateData.rolesId">
+        <select *ngIf="employee.isEditing"  multiple [(ngModel)]="employee.updateData.rolesId">
           <option *ngFor="let role of roles" [value]="role.id">{{ role.role }}</option>
         </select>
       </td>
@@ -92,4 +92,85 @@
       </div>
     </div>
   </div>
+
+  <form (ngSubmit)="onCreate()" #employeeForm="ngForm" class="container mt-4">
+    <div class="form-group">
+      <label class="text-white" for="fullName">Full Name</label>
+      <input type="text" id="fullName" class="form-control" required maxlength="100" [(ngModel)]="newEmployee.fullName" name="fullName" #fullName="ngModel">
+      <div *ngIf="fullName.invalid && fullName.touched" class="text-danger">
+        Full Name is required and must be at most 100 characters.
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label class="text-white" for="login">Login</label>
+      <input type="text" id="login" class="form-control" required maxlength="100" [(ngModel)]="newEmployee.login" name="login" #login="ngModel">
+      <div *ngIf="login.invalid && login.touched" class="text-danger">
+        Login is required and must be at most 100 characters.
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label class="text-white" for="outOfOfficeBalance">Out of Office Balance</label>
+      <input type="number" id="outOfOfficeBalance" class="form-control" required min="0" [(ngModel)]="newEmployee.outOfOfficeBalance" name="outOfOfficeBalance" #outOfOfficeBalance="ngModel">
+      <div *ngIf="outOfOfficeBalance.invalid && outOfOfficeBalance.touched" class="text-danger">
+        Out of Office Balance is required and must be greater or equal to 0.
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label class="text-white" for="subdivisionId">Subdivision</label>
+      <select id="subdivisionId" class="form-control" required [(ngModel)]="newEmployee.subdivisionId" name="subdivisionId" #subdivisionId="ngModel">
+        <option *ngFor="let subdivision of subdivisions" [value]="subdivision.id">{{ subdivision.subdivision }}</option>
+      </select>
+      <div *ngIf="subdivisionId.invalid && subdivisionId.touched" class="text-danger">
+        Subdivision is required.
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label class="text-white" for="positionId">Position</label>
+      <select id="positionId" class="form-control" required [(ngModel)]="newEmployee.positionId" name="positionId" #positionId="ngModel">
+        <option *ngFor="let position of positions" [value]="position.id">{{ position.position }}</option>
+      </select>
+      <div *ngIf="positionId.invalid && positionId.touched" class="text-danger">
+        Position is required.
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label class="text-white" for="statusId">Status</label>
+      <select id="statusId" class="form-control" required [(ngModel)]="newEmployee.statusId" name="statusId" #statusId="ngModel">
+        <option *ngFor="let status of employeeStatuses" [value]="status.id">{{ status.status }}</option>
+      </select>
+      <div *ngIf="statusId.invalid && statusId.touched" class="text-danger">
+        Status is required.
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label class="text-white" for="peoplePartnerId">People Partner ID</label>
+      <input type="number" id="peoplePartnerId" class="form-control" [(ngModel)]="newEmployee.peoplePartnerId" name="peoplePartnerId">
+    </div>
+
+    <div class="form-group">
+      <label class="text-white" for="rolesId">Roles</label>
+      <select id="rolesId" class="form-control" required multiple [(ngModel)]="newEmployee.rolesId" name="rolesId" #rolesId="ngModel">
+        <option *ngFor="let role of roles" [value]="role.id">{{ role.role }}</option>
+      </select>
+      <div *ngIf="rolesId.invalid && rolesId.touched" class="text-danger">
+        Roles are required and must have at least 1 item.
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label class="text-white" for="password">Password</label>
+      <input type="password" id="password" class="form-control" required maxlength="50" [(ngModel)]="newEmployee.password" name="password" #password="ngModel">
+      <div *ngIf="password.invalid && password.touched" class="text-danger">
+        Password is required and must be at most 50 characters.
+      </div>
+    </div>
+
+    <button type="submit" class="btn btn-primary" [disabled]="employeeForm.invalid">Create Employee</button>
+  </form>
 </div>

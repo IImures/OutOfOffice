@@ -1,7 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {NgForOf, NgIf} from "@angular/common";
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
-import {Employee, EmployeeService, UpdateEmployee} from "../employee.service";
+import {Employee, EmployeeService, RegisterEmployee, UpdateEmployee} from "../employee.service";
 import {JwtParserService} from "../../jwt-parser.service";
 import {Position, Role, Status, StatusesService, Subdivision} from "../statuses.service";
 
@@ -31,6 +31,17 @@ export class EmployeeTableComponent implements OnInit{
   positions: Position[] = [];
   roles: Role[] = [];
   employeeStatuses: Status[] = [];
+
+  newEmployee: RegisterEmployee = {
+    fullName: '',
+    login: '',
+    outOfOfficeBalance: 0,
+    subdivisionId: 0,
+    positionId: 0,
+    statusId: 0,
+    rolesId: [],
+    password: ''
+  };
 
   constructor(
     private employeeService: EmployeeService,
@@ -106,6 +117,15 @@ export class EmployeeTableComponent implements OnInit{
     return <boolean>roles.some(role => this.jwtParser.hasRole(role));
   }
 
+  onCreate(){
+    this.employeeService.createEmployee(this.newEmployee)
+      .subscribe({
+        next: () => {
+          this.loadEmployees();
+        }
+      })
+  }
+
   onUpdate(employee: Employee) {
     employee.isEditing = true;
     employee.updateData = {
@@ -122,7 +142,14 @@ export class EmployeeTableComponent implements OnInit{
 
 
   onDelete(employee: Employee) {
-
+    this.employeeService.deleteEmployee(employee.id).subscribe({
+      next: (response: void) => {
+        this.employees = this.employees.filter(emp => emp.id !== employee.id);
+        this.employees.forEach(employee => {
+          this.originalEmployees[employee.id] = {...employee};
+        });
+      }
+    })
   }
 
   onSubmit(employee: Employee){

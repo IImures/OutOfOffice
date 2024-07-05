@@ -28,6 +28,28 @@ export class EmployeeService {
     const headers = new HttpHeaders().set('Authorization', `Bearer ${this.storageService.getItem('token')}`);
     return this.http.put<Employee>(`${this.api}/${updateData.id}`, updateData,{headers: headers}  );
   }
+
+  deleteEmployee(id: number) : Observable<void> {
+    const headers = new HttpHeaders().set('Authorization', `Bearer ${this.storageService.getItem('token')}`);
+    return this.http.delete<void>(`${this.api}/${id}`, {headers: headers})
+  }
+
+  createEmployee(employee: RegisterEmployee): Observable<void> {
+    const headers = new HttpHeaders().set('Authorization', `Bearer ${this.storageService.getItem('token')}`);
+    return this.http.post<void>(`${this.api}/`, employee, {headers: headers}  );
+  }
+}
+
+export interface RegisterEmployee {
+  fullName: string;
+  login: string;
+  outOfOfficeBalance: number;
+  subdivisionId: number;
+  positionId: number;
+  statusId: number;
+  peoplePartnerId?: number;
+  rolesId: number[];
+  password: string;
 }
 
 export interface Employee {
