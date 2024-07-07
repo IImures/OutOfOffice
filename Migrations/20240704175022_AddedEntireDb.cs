@@ -184,7 +184,7 @@ namespace OutOfOffice.Migrations
                     {"Admin"},
                     {"HR"},
                     {"EMP"},
-                    {"PR"}
+                    {"PM"}
                 }
             );
 
