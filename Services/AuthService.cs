@@ -139,10 +139,11 @@ public class AuthService : IAuthService
         
         string name = token.Claims.First(claim => claim.Type == "Name").Value;
         
-        Employee? user = await  _appContext.Employees
+        Employee user = await  _appContext.Employees
             .Include(e => e.Roles)
                 .ThenInclude(r => r.Role)
-            .FirstOrDefaultAsync(u => u.FullName == name);
+            .FirstOrDefaultAsync(u => u.FullName == name)
+            ?? throw new NotFoundException("User not exists", 404);
         
         return new LoginResponse
         {
@@ -198,7 +199,7 @@ public class AuthService : IAuthService
             _configuration["JWT:Issuer"],
             _configuration["JWT:Audience"],
             userClaims,
-            expires: DateTime.Now.AddMinutes(15),
+            expires: DateTime.Now.AddMinutes(1),
             signingCredentials: credentials
         );
         

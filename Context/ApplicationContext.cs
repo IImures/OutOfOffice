@@ -11,7 +11,6 @@ public class ApplicationContext : DbContext
     public DbSet<Position> Positions { get; set; }
     public DbSet<Role> Roles { get; set; }
     public DbSet<EmployeeRole> EmployeeRoles { get; set; }
-    //public DbSet<Authority> Authorities { get; set; }
     public DbSet<EmployeeStatus> EmployeeStatuses { get; set; }
     
     public DbSet<Project> Projects { get; set; }

@@ -31,15 +31,12 @@ public class Employee
     [Column("password")]
     public string Password { get; set; } = null!;
     
-    //Todo: Add Photo property
-    
     [Required]
     [Column("Subdivision_id")]
     [DeleteBehavior(DeleteBehavior.Restrict)]
     public Subdivision Subdivision { get; set; } = null!;
     
     [ForeignKey(nameof(Subdivision))]
-    
     public int SubdivisionId { get; set; }
     
     [Required]
@@ -66,8 +63,6 @@ public class Employee
     public int? PeoplePartnerId { get; set; }
     
     public ICollection<EmployeeRole> Roles { get; set; } = new List<EmployeeRole>();
-    
-    //public ICollection<Authority> Authorities { get; set; } = null!;
     
     public ICollection<ApprovalRequest> ApprovalRequests { get; set; } = null!;
     

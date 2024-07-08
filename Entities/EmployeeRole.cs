@@ -6,6 +6,7 @@ namespace OutOfOffice.Entities;
 [Table("employee_roles")]
 [PrimaryKey("EmployeeId", "RoleId")]
 public class EmployeeRole
+
 {
     
     [Column("fk_employee_id")]
